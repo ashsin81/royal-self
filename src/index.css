@@ -4,8 +4,8 @@
 
 @layer base {
   body {
-    background-color: #F7F4ED;
-    color: #292522;
+    background-color: #0A0208;
+    color: #F7F2E2;
     font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
@@ -13,7 +13,7 @@
   }
 
   .dark body {
-    background-color: #0F060D;
+    background-color: #0A0208;
     color: #F7F2E2;
   }
 }

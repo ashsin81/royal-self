@@ -50,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isDark = profile.theme === 'dark';
 
   return (
-    <header className="sticky top-0 z-30 bg-ivory-200/90 dark:bg-celestial-card/95 backdrop-blur-md border-b border-gold-200/80 dark:border-celestial-border px-3 py-2 transition-colors">
+    <header className="sticky top-0 z-30 bg-[#160614]/90 dark:bg-[#0A0208]/95 backdrop-blur-xl border-b border-amber-500/30 px-3 py-2 transition-colors shadow-lg shadow-black/40">
       <div className="max-w-md mx-auto flex items-center justify-between">
         {/* Brand identity */}
         <div className="flex items-center gap-2">
@@ -59,27 +59,27 @@ export const Header: React.FC<HeaderProps> = ({
               src={profile.avatarUrl}
               alt="Avatar"
               onClick={onOpenProfile}
-              className="w-9 h-9 rounded-full object-cover border-2 border-gold-400 shadow-sm cursor-pointer hover:ring-2 hover:ring-gold-400"
+              className="w-9 h-9 rounded-full object-cover border-2 border-amber-400 shadow-sm cursor-pointer hover:ring-2 hover:ring-amber-300"
             />
           ) : (
             <div
               onClick={onOpenProfile}
-              className="w-9 h-9 rounded-full bg-gradient-to-br from-maroon-700 via-maroon-800 to-maroon-900 border border-gold-300 flex items-center justify-center shadow-sm cursor-pointer"
+              className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-600 via-rose-600 to-purple-800 border border-amber-300 flex items-center justify-center shadow-sm cursor-pointer"
             >
               <span className="text-base" role="img" aria-label="Royal Crown">👑</span>
             </div>
           )}
           <div>
             <div className="flex items-center gap-1.5">
-              <h1 className="font-serif font-black tracking-widest text-xs sm:text-sm text-maroon-800 dark:text-gold-200 leading-none">
+              <h1 className="font-serif font-black tracking-widest text-xs sm:text-sm text-amber-200 leading-none">
                 ROYAL SELF
               </h1>
-              <span className="text-[10px] bg-gold-100 dark:bg-gold-950/80 text-gold-700 dark:text-gold-300 px-1.5 py-0.2 rounded font-semibold border border-gold-300/60">
-                स्वराज्य
+              <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded font-semibold border border-amber-400/40">
+                30-Day
               </span>
             </div>
-            <p className="text-[10px] text-spiritual-muted dark:text-gold-300/70 font-hindi font-medium">
-              राजाई स्वराज्य साथी • BK Purusharth
+            <p className="text-[10px] text-amber-300/70 font-hindi font-medium">
+              राजाई स्वराज्य साथी • AI Companion
             </p>
           </div>
         </div>

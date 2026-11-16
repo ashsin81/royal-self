@@ -61,7 +61,11 @@ export const storage = {
       avatarUrl: '',
       customInspirationPhoto: '',
       fontScale: 'base',
-      ttsSpeed: 0.95
+      ttsSpeed: 0.95,
+      currentJourneyDay: 1,
+      completedJourneyDays: [],
+      journeyReflections: {},
+      personalGalleryImages: []
     };
   },
 

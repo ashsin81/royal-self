@@ -17,6 +17,9 @@ import { storage } from './utils/storage';
 import { MURLI_LIBRARY } from './data/murliContent';
 import { Header } from './components/Header';
 import { Navbar, TabType } from './components/Navbar';
+import { ThirtyDayJourneyView } from './components/Journey/ThirtyDayJourneyView';
+import { PersonalAltarView } from './components/Altar/PersonalAltarView';
+import { MeditationMusicBar } from './components/Audio/MeditationMusicBar';
 import { HomeView } from './components/Home/HomeView';
 import { PracticeView } from './components/Practice/PracticeView';
 import { RescueView } from './components/Rescue/RescueView';
@@ -27,7 +30,7 @@ import { TeacherDashboard } from './components/Teacher/TeacherDashboard';
 import { AskBabaAI } from './components/Divine/AskBabaAI';
 import { PhoneLoginModal } from './components/Auth/PhoneLoginModal';
 import { OnboardingModal } from './components/Onboarding/OnboardingModal';
-import { Lock, ArrowLeft, KeyRound, ShieldCheck } from 'lucide-react';
+import { Lock, ArrowLeft } from 'lucide-react';
 import { sound } from './utils/audio';
 
 export const App: React.FC = () => {
@@ -58,11 +61,12 @@ export const App: React.FC = () => {
     storage.getSpinRewardToday()
   );
 
-  // UI Navigation & Modals state
-  const [activeTab, setActiveTab] = useState<TabType>('home');
+  // UI Navigation & Modals state — Default to 'journey' (30-day Purusharth roadmap)
+  const [activeTab, setActiveTab] = useState<TabType>('journey');
   const [showOnboarding, setShowOnboarding] = useState<boolean>(!profile.onboarded);
   const [showPhoneLoginModal, setShowPhoneLoginModal] = useState<boolean>(false);
   const [showAskBabaModal, setShowAskBabaModal] = useState<boolean>(false);
+  const [initialBabaPrompt, setInitialBabaPrompt] = useState<string>('');
   const [selectedRescueSituationId, setSelectedRescueSituationId] = useState<string | undefined>(undefined);
 
   // Secretive Admin / Teacher Portal via URL Hash (#admin, #/admin, ?admin=true)
@@ -251,6 +255,16 @@ export const App: React.FC = () => {
     setActiveTab('rescue');
   };
 
+  // Open Baba AI Chat with optional prompt
+  const handleOpenBabaChat = (prompt?: string) => {
+    if (prompt) {
+      setInitialBabaPrompt(prompt);
+    } else {
+      setInitialBabaPrompt('');
+    }
+    setShowAskBabaModal(true);
+  };
+
   // Export & Import
   const handleExportData = () => {
     const jsonStr = storage.exportAllData();
@@ -302,25 +316,25 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ivory-200 dark:bg-celestial-dark text-spiritual-dark dark:text-gold-100 font-sans flex flex-col selection:bg-maroon-100 selection:text-maroon-900 transition-colors">
+    <div className="min-h-screen bg-[#0C030B] text-gold-100 font-sans flex flex-col selection:bg-rose-950 selection:text-amber-200 transition-colors">
       
       {/* If secret #admin link was opened */}
       {isAdminHashActive ? (
         <div className="flex-1 w-full max-w-md mx-auto px-4 py-6 sm:px-5">
           {!isAdminPinVerified ? (
             /* PIN Gate for Secret Admin Access */
-            <div className="my-auto py-12 px-6 rounded-3xl bg-white dark:bg-maroon-950 border-2 border-amber-400 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95">
-              <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 border-2 border-amber-400 flex items-center justify-center mx-auto text-2xl shadow-lg">
-                <Lock className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+            <div className="my-auto py-12 px-6 rounded-3xl bg-[#1A0617] border-2 border-amber-400 shadow-2xl text-center space-y-4 animate-in fade-in zoom-in-95">
+              <div className="w-16 h-16 rounded-full bg-amber-500/20 text-amber-300 border-2 border-amber-400 flex items-center justify-center mx-auto text-2xl shadow-lg">
+                <Lock className="w-8 h-8 text-amber-400" />
               </div>
               <div>
-                <span className="text-[10px] font-serif uppercase tracking-widest text-amber-600 dark:text-amber-400 font-bold block">
+                <span className="text-[10px] font-serif uppercase tracking-widest text-amber-400 font-bold block">
                   SECRET ADMIN ACCESS
                 </span>
-                <h2 className="text-lg font-bold font-hindi text-maroon-900 dark:text-amber-100">
+                <h2 className="text-lg font-bold font-hindi text-amber-100">
                   सेवाकेंद्र व्यवस्थापक एवं प्रभारी पोर्टल
                 </h2>
-                <p className="text-xs text-spiritual-muted dark:text-gray-300 font-hindi mt-1">
+                <p className="text-xs text-gray-300 font-hindi mt-1">
                   यह पोर्टल केवल सेवाकेंद्र प्रभारी के लिए है। आगे बढ़ने के लिए सुरक्षा पिन दर्ज करें:
                 </p>
               </div>
@@ -334,10 +348,10 @@ export const App: React.FC = () => {
                     placeholder="डिफ़ॉल्ट पिन: 108"
                     value={adminPinInput}
                     onChange={(e) => setAdminPinInput(e.target.value)}
-                    className="w-full text-center tracking-widest text-lg font-bold py-2.5 px-4 rounded-xl border border-amber-400 bg-ivory-50 dark:bg-maroon-900 text-maroon-950 dark:text-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full text-center tracking-widest text-lg font-bold py-2.5 px-4 rounded-xl border border-amber-400 bg-black/60 text-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                   {pinError && (
-                    <p className="text-[11px] text-rose-600 dark:text-rose-400 font-hindi mt-1">
+                    <p className="text-[11px] text-rose-400 font-hindi mt-1">
                       {pinError}
                     </p>
                   )}
@@ -353,7 +367,7 @@ export const App: React.FC = () => {
 
               <button
                 onClick={handleExitAdminMode}
-                className="text-xs text-spiritual-muted dark:text-gray-400 hover:text-maroon-700 dark:hover:text-amber-300 font-hindi flex items-center justify-center gap-1 mx-auto pt-2"
+                className="text-xs text-gray-400 hover:text-amber-300 font-hindi flex items-center justify-center gap-1 mx-auto pt-2"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>विद्यार्थी ऐप पर वापस लौटें</span>
@@ -373,20 +387,100 @@ export const App: React.FC = () => {
       ) : (
         /* Normal Public Student App */
         <>
-          {/* Top App Bar Header (100% Student-Focused, No Teacher links) */}
+          {/* Top Mystic App Bar Header */}
           <Header
             profile={profile}
             isTeacherModeActive={false}
             onOpenProfile={() => setActiveTab('profile')}
             onOpenSettings={() => setActiveTab('settings')}
             onOpenLogin={() => setShowPhoneLoginModal(true)}
-            onOpenAskBaba={() => setShowAskBabaModal(true)}
+            onOpenAskBaba={() => handleOpenBabaChat()}
             onToggleTheme={handleToggleTheme}
             onLanguageChange={handleLanguageChange}
           />
 
           {/* Main Content Area */}
           <main className="flex-1 w-full max-w-md mx-auto px-4 py-3 sm:px-5">
+            
+            {/* 1. PRIMARY VIEW: 30-Day Custom Purusharthi Journey */}
+            {activeTab === 'journey' && (
+              <ThirtyDayJourneyView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onOpenBabaChat={handleOpenBabaChat}
+              />
+            )}
+
+            {/* 2. DIRECT 1-TO-1 WITH BABA AI */}
+            {activeTab === 'baba-ai' && (
+              <div className="py-2">
+                <AskBabaAI
+                  onClose={() => setActiveTab('journey')}
+                  language={profile.language}
+                  savedApiKey={profile.geminiApiKey}
+                  initialQuery={initialBabaPrompt}
+                  onSaveApiKey={(key) => setProfile((p) => ({ ...p, geminiApiKey: key }))}
+                />
+              </div>
+            )}
+
+            {/* 3. PERSONAL ALTAR & GALLERY */}
+            {activeTab === 'altar' && (
+              <PersonalAltarView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onOpenBabaChat={() => handleOpenBabaChat()}
+              />
+            )}
+
+            {/* 4. RESCUE VIEW */}
+            {activeTab === 'rescue' && (
+              <RescueView
+                profile={profile}
+                initialSelectedSituationId={selectedRescueSituationId}
+                onSaveSession={handleSaveRescueSession}
+              />
+            )}
+
+            {/* 5. PASSPORT & PROFILE */}
+            {activeTab === 'profile' && (
+              <ProfileView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onRetakeOnboarding={() => setShowOnboarding(true)}
+                onOpenSettings={() => setActiveTab('settings')}
+                onExportData={handleExportData}
+                onImportData={handleImportData}
+                onResetData={handleResetData}
+              />
+            )}
+
+            {/* 6. SETTINGS */}
+            {activeTab === 'settings' && (
+              <SettingsView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onExportData={handleExportData}
+                onImportData={handleImportData}
+                onResetData={handleResetData}
+                onRetakeOnboarding={() => setShowOnboarding(true)}
+              />
+            )}
+
+            {/* 7. PROGRESS & STAMPS (Optional accessible tab) */}
+            {activeTab === 'progress' && (
+              <ProgressView
+                stamps={stamps}
+                baggage={baggage}
+                goals={goals}
+                rescueSessions={rescueSessions}
+                nightReflections={nightReflections}
+                onToggleBaggageRelease={handleToggleBaggageRelease}
+                onSaveGoal={handleSaveGoal}
+              />
+            )}
+
+            {/* 8. HOME DASHBOARD (Accessible if needed) */}
             {activeTab === 'home' && (
               <HomeView
                 profile={profile}
@@ -400,7 +494,7 @@ export const App: React.FC = () => {
                 spinRewardToday={spinRewardToday}
                 onSaveSpinReward={handleSaveSpinReward}
                 onMarkMessageRead={handleMarkTeacherMessageRead}
-                onOpenAskBaba={() => setShowAskBabaModal(true)}
+                onOpenAskBaba={() => handleOpenBabaChat()}
                 onUpdateProfile={setProfile}
                 onTogglePracticeItem={handleTogglePracticeItem}
                 onNavigateTab={(tab) => {
@@ -410,79 +504,38 @@ export const App: React.FC = () => {
                 onSelectRescueSituation={handleSelectRescueSituation}
               />
             )}
-
-            {activeTab === 'practice' && (
-              <PracticeView
-                practice={practice}
-                onToggleItem={handleTogglePracticeItem}
-                onSaveNightReflection={handleSaveNightReflection}
-                existingReflection={nightReflections[0]}
-              />
-            )}
-
-            {activeTab === 'rescue' && (
-              <RescueView
-                profile={profile}
-                initialSelectedSituationId={selectedRescueSituationId}
-                onSaveSession={handleSaveRescueSession}
-              />
-            )}
-
-            {activeTab === 'progress' && (
-              <ProgressView
-                stamps={stamps}
-                baggage={baggage}
-                goals={goals}
-                rescueSessions={rescueSessions}
-                nightReflections={nightReflections}
-                onToggleBaggageRelease={handleToggleBaggageRelease}
-                onSaveGoal={handleSaveGoal}
-              />
-            )}
-
-            {activeTab === 'profile' && (
-              <ProfileView
-                profile={profile}
-                onUpdateProfile={setProfile}
-                onRetakeOnboarding={() => setShowOnboarding(true)}
-                onOpenSettings={() => setActiveTab('settings')}
-                onExportData={handleExportData}
-                onImportData={handleImportData}
-                onResetData={handleResetData}
-              />
-            )}
-
-            {activeTab === 'settings' && (
-              <SettingsView
-                profile={profile}
-                onUpdateProfile={setProfile}
-                onExportData={handleExportData}
-                onImportData={handleImportData}
-                onResetData={handleResetData}
-                onRetakeOnboarding={() => setShowOnboarding(true)}
-              />
-            )}
           </main>
+
+          {/* Integrated Ambient Meditation Music Floating Bar */}
+          <MeditationMusicBar />
 
           {/* Fixed Bottom Navigation Bar */}
           <Navbar
             activeTab={activeTab}
             setActiveTab={(tab) => {
-              if (tab === 'rescue') setSelectedRescueSituationId(undefined);
-              sound.playSoftClick();
-              setActiveTab(tab);
+              if (tab === 'baba-ai') {
+                handleOpenBabaChat();
+              } else {
+                if (tab === 'rescue') setSelectedRescueSituationId(undefined);
+                sound.playSoftClick();
+                setActiveTab(tab);
+              }
             }}
             language={profile.language}
           />
         </>
       )}
 
-      {/* Ask Baba AI Guidance Modal */}
-      {showAskBabaModal && (
+      {/* Ask Baba AI Guidance Modal (Floating modal when invoked from other screens) */}
+      {showAskBabaModal && activeTab !== 'baba-ai' && (
         <AskBabaAI
-          onClose={() => setShowAskBabaModal(false)}
+          onClose={() => {
+            setShowAskBabaModal(false);
+            setInitialBabaPrompt('');
+          }}
           language={profile.language}
           savedApiKey={profile.geminiApiKey}
+          initialQuery={initialBabaPrompt}
           onSaveApiKey={(key) => setProfile((p) => ({ ...p, geminiApiKey: key }))}
         />
       )}

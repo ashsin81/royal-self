@@ -21,6 +21,10 @@ export interface UserProfile {
   ttsSpeed?: number;
   geminiApiKey?: string;
   adminPin?: string;
+  currentJourneyDay?: number; // 1 to 30
+  completedJourneyDays?: number[]; // e.g. [1, 2, 3]
+  journeyReflections?: Record<number, string>; // Day -> user reflection
+  personalGalleryImages?: string[]; // User's uploaded personal altar photos
 }
 
 export interface AskBabaMessage {

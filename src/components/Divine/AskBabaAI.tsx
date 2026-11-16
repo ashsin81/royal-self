@@ -20,6 +20,7 @@ interface AskBabaAIProps {
   onClose: () => void;
   language?: 'hi' | 'en' | 'hinglish';
   savedApiKey?: string;
+  initialQuery?: string;
   onSaveApiKey?: (key: string) => void;
 }
 
@@ -27,6 +28,7 @@ export const AskBabaAI: React.FC<AskBabaAIProps> = ({
   onClose,
   language = 'hi',
   savedApiKey = '',
+  initialQuery = '',
   onSaveApiKey,
 }) => {
   const [messages, setMessages] = useState<AskBabaMessage[]>([
@@ -61,6 +63,12 @@ export const AskBabaAI: React.FC<AskBabaAIProps> = ({
       setIsSpeaking(speaking);
     });
   }, []);
+
+  useEffect(() => {
+    if (initialQuery && initialQuery.trim()) {
+      handleSend(initialQuery.trim());
+    }
+  }, [initialQuery]);
 
   const quickQuestions = [
     { label: 'मन में बहुत व्यर्थ चल रहा है', icon: '🕊️', query: 'बाबा, मन में बहुत व्यर्थ संकल्प चल रहे हैं, मन शांत कैसे रखें?' },
