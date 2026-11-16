@@ -1,0 +1,237 @@
+import { SpinReward, DailyDivineCard, StudentProgressSummary, TeacherMessage } from '../types';
+
+export const SPIN_WHEEL_ITEMS: SpinReward[] = [
+  {
+    id: 'spin-1',
+    type: 'swaman',
+    titleHi: 'मास्टर सर्वशक्तिमान',
+    titleEn: 'Master Almighty',
+    descriptionHi: 'मैं सर्वशक्तिमान शिव बाबा का सच्चा बच्चा हूँ। कोई भी परिस्थिति मेरी स्थिति से बड़ी नहीं।',
+    color: '#8A2C3F', // Crimson maroon
+    icon: '👑'
+  },
+  {
+    id: 'spin-2',
+    type: 'vardan',
+    titleHi: 'वरदान: संतुष्टता',
+    titleEn: 'Blessing: Contentment',
+    descriptionHi: 'सदा प्राप्तियों को सामने रख भरपूर रहने वाले, हर परिस्थिति में संतुष्ट आत्मा भव।',
+    color: '#94723B', // Antique Gold
+    icon: '✨'
+  },
+  {
+    id: 'spin-3',
+    type: 'swaman',
+    titleHi: 'शांत स्वरूप आत्मा',
+    titleEn: 'Embodiment of Peace',
+    descriptionHi: 'गंभीर महासागर की तरह अचल, अडोल और शांत रहना ही मेरा अनादि स्वरूप है।',
+    color: '#2A5A44', // Forest Emerald
+    icon: '🕊️'
+  },
+  {
+    id: 'spin-4',
+    type: 'vardan',
+    titleHi: 'वरदान: साक्षी स्थिति',
+    titleEn: 'Blessing: Observer State',
+    descriptionHi: 'ड्रामा के हर दृश्य को कल्याणकारी समझ साक्षी होकर देखने वाले, निर्लेप भव।',
+    color: '#702333',
+    icon: '👁️'
+  },
+  {
+    id: 'spin-5',
+    type: 'swaman',
+    titleHi: 'आनंद स्वरूप आत्मा',
+    titleEn: 'Embodiment of Joy',
+    descriptionHi: 'आंतरिक सुख और अविनाशी खुशी ही मेरा सच्चा श्रृंगार है। उदासी माया का खेल है।',
+    color: '#B47B42',
+    icon: '🌸'
+  },
+  {
+    id: 'spin-6',
+    type: 'vardan',
+    titleHi: 'वरदान: बालक सो मालिक',
+    titleEn: 'Blessing: Sovereign Ruler',
+    descriptionHi: 'सर्व कर्मेन्द्रियों पर पूरा स्वराज्य रखने वाले, प्रकृतिजीत सो स्वराज्य अधिकारी भव।',
+    color: '#8A2C3F',
+    icon: '💎'
+  },
+  {
+    id: 'spin-7',
+    type: 'swaman',
+    titleHi: 'पवित्रता की मूरत',
+    titleEn: 'Embodiment of Purity',
+    descriptionHi: 'मेरी दृष्टि, वृत्ति और बोल में पावनता की सुगंध है। मैं निष्काम फरिश्ता हूँ।',
+    color: '#2A5A44',
+    icon: '🪷'
+  },
+  {
+    id: 'spin-8',
+    type: 'vardan',
+    titleHi: 'वरदान: निश्चयबुद्धि विजयी',
+    titleEn: 'Blessing: Undshakeable Faith',
+    descriptionHi: 'बाप के साथ और ड्रामा के अटल नियम पर अटल निश्चय रखने वाले, सदा विजयी भव।',
+    color: '#94723B',
+    icon: '🦁'
+  },
+  {
+    id: 'spin-9',
+    type: 'swaman',
+    titleHi: 'ज्ञान सूर्य का बच्चा',
+    titleEn: 'Child of Wisdom Sun',
+    descriptionHi: 'मेरी बुद्धि में परमात्मा की श्रीमत का प्रकाश है। उलझन मेरा संस्कार नहीं।',
+    color: '#B47B42',
+    icon: '☀️'
+  },
+  {
+    id: 'spin-10',
+    type: 'vardan',
+    titleHi: 'वरदान: दाता स्वरूप',
+    titleEn: 'Blessing: Giver Soul',
+    descriptionHi: 'बिना किसी अपेक्षा के सर्व आत्माओं को शांति और प्रेम का सकाश देने वाले, महान दाता भव।',
+    color: '#702333',
+    icon: '💖'
+  },
+  {
+    id: 'spin-11',
+    type: 'swaman',
+    titleHi: 'निर्भय व निश्चिंत',
+    titleEn: 'Fearless & Carefree',
+    descriptionHi: 'जिसके सिर पर सर्वशक्तिमान बाप का हाथ हो, उसे किसी बात का भय नहीं।',
+    color: '#2A5A44',
+    icon: '🛡️'
+  },
+  {
+    id: 'spin-12',
+    type: 'vardan',
+    titleHi: 'वरदान: कर्मातीत अवस्था',
+    titleEn: 'Blessing: Beyond Karma',
+    descriptionHi: 'कर्म करते भी देह और देह के भान से न्यारे रहने वाले, अतीन्द्रिय सुख के अनुभवी भव।',
+    color: '#94723B',
+    icon: '☸️'
+  }
+];
+
+export const DAILY_DIVINE_CARDS: DailyDivineCard[] = [
+  {
+    id: 'card-1',
+    cardTitle: 'साक्षीपन का दिव्य कवच',
+    babaGreeting: 'मीठे बच्चे...',
+    mainMessage: 'आज जो भी दृश्य सामने आए, पहले 5 सेकंड के लिए साक्षी होकर देखना। जब तुम साक्षी बनते हो तो क्यों और क्या का प्रश्न समाप्त हो जाता है और बाबा की छत्रछाया प्रत्यक्ष अनुभव होती है।',
+    vardan: 'परिस्थिति को खेल समझकर पार करने वाले, सदा हल्के और निश्चिंत भव।',
+    slogan: 'सच्चा स्वमान वह है जो दूसरों को भी मान देने योग्य बना दे।',
+    drushtiQuality: 'साक्षी दृष्टि',
+    imageTheme: 'celestial-eye'
+  },
+  {
+    id: 'card-2',
+    cardTitle: 'मौन की अलौकिक शक्ति',
+    babaGreeting: 'लाडले बच्चे...',
+    mainMessage: 'आज अपनी वाणी को बहुत अनमोल समझना। हर बात का उत्तर देना या सफाई देना जरूरी नहीं होता। जब तुम अंतर्मुखी होकर शुभभावना का मौन रखते हो, तो व्यर्थ वायुमंडल स्वयं शांत हो जाता है।',
+    vardan: 'वाणी के संयम द्वारा अपनी शक्तियों को जमा करने वाले, एकाग्रचित्त भव।',
+    slogan: 'कम बोलना, धीरे बोलना और मीठा बोलना ही राजाई संस्कार है।',
+    drushtiQuality: 'अंतर्मुखता',
+    imageTheme: 'lotus-silence'
+  },
+  {
+    id: 'card-3',
+    cardTitle: 'फुलस्टॉप का वरदान',
+    babaGreeting: 'नूरिरतन बच्चे...',
+    mainMessage: 'बीती हुई बातों को मन में बार-बार दोहराना अर्थात् अपनी शक्तियों को व्यर्थ गंवाना। जो बीत गया उस पर एक सेकंड में फुलस्टॉप लगाओ। तुम बिन्दी, बाबा बिन्दी और ड्रामा का हर दृश्य कल्याणकारी।',
+    vardan: 'बीती को बीती कर वर्तमान को श्रेष्ठ बनाने वाले, तीव्र पुरुषार्थी भव।',
+    slogan: 'फुलस्टॉप लगाना अर्थात् व्यर्थ को समर्थ में परिवर्तन करना।',
+    drushtiQuality: 'बिन्दु स्वरूप',
+    imageTheme: 'golden-dot'
+  },
+  {
+    id: 'card-4',
+    cardTitle: 'स्वराज्य अधिकारी की शान',
+    babaGreeting: 'सपूत बच्चे...',
+    mainMessage: 'तुम विश्व के मालिक बनने वाली राजयोगी आत्माएँ हो। अपनी किसी भी कर्मेन्द्रिय — मन, आंखें या जुबान को अपने ऊपर हुक्म न चलाने दो। जब चाहो, जहाँ चाहो, मन को वहाँ एकाग्र कर सको, यही सच्ची राजाई है।',
+    vardan: 'मन और बुद्धि को अपने हुक्म प्रमाण चलाने वाले, सच्चे स्वराज्य अधिकारी भव।',
+    slogan: 'स्वराज्य ही विश्व-राज्य का सच्चा आधार है।',
+    drushtiQuality: 'राजाई शान',
+    imageTheme: 'royal-throne'
+  },
+  {
+    id: 'card-5',
+    cardTitle: 'रहमदिल और क्षमा की भावना',
+    babaGreeting: 'सच्चे स्नेही बच्चे...',
+    mainMessage: 'यदि कोई अज्ञानवश या संस्कारवश तुम्हारे साथ अनुचित व्यवहार करे, तो क्रोधित होने के बजाय रहमदिल बनो। समझो कि यह आत्मा अभी कमजोर है और इसे मेरी शांति के सकाश की आवश्यकता है।',
+    vardan: 'दूसरों की कमियों को दिल में न समाकर शुभचिंतक दृष्टि रखने वाले, दयालु भव।',
+    slogan: 'जो सबको दुआएँ देता है, उसका खजाना कभी खाली नहीं होता।',
+    drushtiQuality: 'शुभभावना दृष्टि',
+    imageTheme: 'divine-heart'
+  }
+];
+
+export const INITIAL_STUDENTS_PROGRESS: StudentProgressSummary[] = [
+  {
+    id: 'stud-1',
+    phone: '9876543210',
+    name: 'राजेश भाई (Rajesh Bhai)',
+    centerName: 'शांति निकेतन सेवाकेंद्र, दिल्ली',
+    streakDays: 14,
+    completedTodayCount: 5,
+    activeSanskar: 'क्रोध के स्थान पर धैर्य व शांति',
+    unlockedStampsCount: 7,
+    lastActive: 'आज, 06:15 AM',
+    lastReflection: 'आज कार्यालय में तनाव के बीच 5 सेकंड रुककर शांत रहा। क्रोध को कर्म नहीं बनने दिया।',
+    ratingAverage: 4.8,
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'stud-2',
+    phone: '9812345678',
+    name: 'सुनीता बहन (Sunita Behan)',
+    centerName: 'शांति सरोवर केंद्र, मुम्बई',
+    streakDays: 8,
+    completedTodayCount: 4,
+    activeSanskar: 'व्यर्थ संकल्पों के स्थान पर समर्थ चिंतन',
+    unlockedStampsCount: 5,
+    lastActive: 'आज, 07:45 AM',
+    lastReflection: 'मन की व्यर्थ रील को फुलस्टॉप लगाया और बाबा के महावाक्यों पर मनन किया।',
+    ratingAverage: 4.2,
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'stud-3',
+    phone: '9798765432',
+    name: 'अमित भाई (Amit Bhai)',
+    centerName: 'आनंद धाम सेवाकेंद्र, जयपुर',
+    streakDays: 21,
+    completedTodayCount: 5,
+    activeSanskar: 'तुलना व ईर्ष्या के स्थान पर गुण-ग्राहक दृष्टि',
+    unlockedStampsCount: 11,
+    lastActive: 'आज, 05:30 AM',
+    lastReflection: 'दूसरे भाई की विशेषता देखकर सच्ची खुशी अनुभव की और स्वमान में स्थित रहा।',
+    ratingAverage: 4.9,
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'stud-4',
+    phone: '9123456780',
+    name: 'प्रियंका बहन (Priyanka Behan)',
+    centerName: 'मधुबन वाटिका, पुणे',
+    streakDays: 3,
+    completedTodayCount: 2,
+    activeSanskar: 'आलस्य के स्थान पर अमृतवेले की तत्परता',
+    unlockedStampsCount: 3,
+    lastActive: 'कल, 09:20 PM',
+    lastReflection: 'अमृतवेले थोड़ा खिंचाव रहा लेकिन मुरली क्लास समय पर पूरी की।',
+    ratingAverage: 3.8,
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  }
+];
+
+export const INITIAL_TEACHER_MESSAGES: TeacherMessage[] = [
+  {
+    id: 'msg-1',
+    fromTeacherName: 'बीके आशा दीदी (Center Incharge)',
+    toStudentId: 'current-user',
+    title: 'विशेष दृष्टि एवं आत्मिक शुभकामना',
+    messageText: 'मीठे बच्चे, आपके पुरुषार्थ में निरंतरता देखकर बाबा बहुत प्रसन्न हैं। आज विशेष साक्षीपन का अभ्यास करना और हर परिस्थिति में बाबा की छत्रछाया का अनुभव करना।',
+    blessingVardan: 'सर्व खजानों से भरपूर, सदा संतुष्ट आत्मा भव।',
+    sentAt: 'आज, 08:00 AM',
+    read: false
+  }
+];

@@ -5,10 +5,15 @@ import {
   RescueSessionRecord,
   NightReflectionRecord,
   PassportStamp,
-  BaggageItem
+  BaggageItem,
+  StudentProgressSummary,
+  TeacherMessage,
+  DailyDivineCard,
+  SpinReward
 } from '../types';
 import { INITIAL_STAMPS } from '../data/stampsData';
 import { SANSKAR_GOAL_PRESETS, INITIAL_BAGGAGE } from '../data/sanskarData';
+import { INITIAL_STUDENTS_PROGRESS, INITIAL_TEACHER_MESSAGES, DAILY_DIVINE_CARDS, SPIN_WHEEL_ITEMS } from '../data/divineContent';
 
 const KEYS = {
   PROFILE: 'royal_self_profile',
@@ -19,6 +24,11 @@ const KEYS = {
   REFLECTIONS: 'royal_self_reflections',
   STAMPS: 'royal_self_stamps',
   BAGGAGE: 'royal_self_baggage',
+  STUDENTS: 'royal_self_students',
+  TEACHER_MESSAGES: 'royal_self_teacher_messages',
+  PHONE_NUMBERS: 'royal_self_remembered_phones',
+  SAVED_CARD_TODAY: 'royal_self_card_today',
+  SAVED_SPIN_TODAY: 'royal_self_spin_today'
 };
 
 export const getTodayDateString = (): string => {
@@ -35,8 +45,13 @@ export const storage = {
       console.error(e);
     }
     return {
+      id: 'stud-1',
+      phone: '9876543210',
       name: 'राजयोगी आत्मा',
+      role: 'student',
+      centerName: 'शांति निकेतन सेवाकेंद्र, दिल्ली',
       language: 'hi',
+      theme: 'light',
       onboarded: false,
       selectedQualities: ['शांत स्वरूप', 'मास्टर सर्वशक्तिमान स्वरूप', 'पवित्र स्वरूप'],
       primarySanskarGoal: 'प्रतिक्रिया के स्थान पर शांति व धैर्य',
@@ -46,21 +61,75 @@ export const storage = {
       avatarUrl: '',
       customInspirationPhoto: '',
       fontScale: 'base',
-      ttsSpeed: 0.95,
-      reminderPreferences: {
-        morning: true,
-        amritvela: true,
-        afternoon: true,
-        evening: true,
-        night: true,
-        morningTime: '06:00',
-        nightTime: '21:30'
-      }
+      ttsSpeed: 0.95
     };
   },
 
   setProfile(profile: UserProfile): void {
     localStorage.setItem(KEYS.PROFILE, JSON.stringify(profile));
+    this.rememberPhone(profile.phone, profile.name);
+  },
+
+  getRememberedPhones(): { phone: string; name: string; role: 'student' | 'teacher' }[] {
+    try {
+      const data = localStorage.getItem(KEYS.PHONE_NUMBERS);
+      if (data) return JSON.parse(data);
+    } catch {}
+    return [
+      { phone: '9876543210', name: 'राजयोगी आत्मा (Student)', role: 'student' },
+      { phone: '9800000000', name: 'बीके आशा दीदी (Center Incharge)', role: 'teacher' }
+    ];
+  },
+
+  rememberPhone(phone: string, name: string): void {
+    if (!phone) return;
+    const list = this.getRememberedPhones();
+    const existing = list.find(p => p.phone === phone);
+    if (!existing) {
+      list.push({ phone, name, role: 'student' });
+      localStorage.setItem(KEYS.PHONE_NUMBERS, JSON.stringify(list));
+    }
+  },
+
+  getStudents(): StudentProgressSummary[] {
+    try {
+      const data = localStorage.getItem(KEYS.STUDENTS);
+      if (data) return JSON.parse(data);
+    } catch (e) {
+      console.error(e);
+    }
+    localStorage.setItem(KEYS.STUDENTS, JSON.stringify(INITIAL_STUDENTS_PROGRESS));
+    return INITIAL_STUDENTS_PROGRESS;
+  },
+
+  setStudents(list: StudentProgressSummary[]): void {
+    localStorage.setItem(KEYS.STUDENTS, JSON.stringify(list));
+  },
+
+  getTeacherMessages(): TeacherMessage[] {
+    try {
+      const data = localStorage.getItem(KEYS.TEACHER_MESSAGES);
+      if (data) return JSON.parse(data);
+    } catch (e) {
+      console.error(e);
+    }
+    localStorage.setItem(KEYS.TEACHER_MESSAGES, JSON.stringify(INITIAL_TEACHER_MESSAGES));
+    return INITIAL_TEACHER_MESSAGES;
+  },
+
+  addTeacherMessage(msg: TeacherMessage): void {
+    const list = this.getTeacherMessages();
+    list.unshift(msg);
+    localStorage.setItem(KEYS.TEACHER_MESSAGES, JSON.stringify(list));
+  },
+
+  markTeacherMessageRead(id: string): void {
+    const list = this.getTeacherMessages();
+    const target = list.find(m => m.id === id);
+    if (target) {
+      target.read = true;
+      localStorage.setItem(KEYS.TEACHER_MESSAGES, JSON.stringify(list));
+    }
   },
 
   getDailyPractice(): DailyPracticeState {
@@ -88,7 +157,6 @@ export const storage = {
 
   setDailyPractice(practice: DailyPracticeState): void {
     localStorage.setItem(KEYS.PRACTICE_TODAY, JSON.stringify(practice));
-    // Also save into history
     try {
       const historyStr = localStorage.getItem(KEYS.PRACTICE_HISTORY);
       const history: Record<string, DailyPracticeState> = historyStr ? JSON.parse(historyStr) : {};
@@ -183,7 +251,7 @@ export const storage = {
       {
         id: 'ref-1',
         date: getTodayDateString(),
-        successfulSituation: 'आज कार्यालय में तनाव के बीच स्वयं को शांत स्वरूप आत्मा अनुभव किया।',
+        successfulSituation: 'आज कार्यस्थल में तनाव के बीच स्वयं को शांत स्वरूप आत्मा अनुभव किया।',
         oldPatternRecognized: 'जल्दबाजी में दूसरों को सुधारने की इच्छा जागृत हुई।',
         nextElevatedThought: 'दूसरों को बदलने के बजाय पहले अपनी स्थिति को सुखदाई बनाना है।',
         gratitudeToBaba: 'बाबा ने पूरे दिन छत्रछाया देकर हल्केपन का अनुभव कराया।',
@@ -238,6 +306,38 @@ export const storage = {
     localStorage.setItem(KEYS.BAGGAGE, JSON.stringify(items));
   },
 
+  getCardOfTheDay(): DailyDivineCard {
+    const today = getTodayDateString();
+    try {
+      const data = localStorage.getItem(KEYS.SAVED_CARD_TODAY);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (parsed.date === today) return parsed.card;
+      }
+    } catch {}
+    // Pick deterministic card based on day or first
+    const card = DAILY_DIVINE_CARDS[new Date().getDate() % DAILY_DIVINE_CARDS.length];
+    localStorage.setItem(KEYS.SAVED_CARD_TODAY, JSON.stringify({ date: today, card }));
+    return card;
+  },
+
+  getSpinRewardToday(): SpinReward | null {
+    const today = getTodayDateString();
+    try {
+      const data = localStorage.getItem(KEYS.SAVED_SPIN_TODAY);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (parsed.date === today) return parsed.reward;
+      }
+    } catch {}
+    return null;
+  },
+
+  saveSpinRewardToday(reward: SpinReward): void {
+    const today = getTodayDateString();
+    localStorage.setItem(KEYS.SAVED_SPIN_TODAY, JSON.stringify({ date: today, reward }));
+  },
+
   exportAllData(): string {
     const backup = {
       profile: this.getProfile(),
@@ -248,6 +348,8 @@ export const storage = {
       nightReflections: this.getNightReflections(),
       stamps: this.getStamps(),
       baggage: this.getBaggage(),
+      teacherMessages: this.getTeacherMessages(),
+      students: this.getStudents(),
       exportedAt: new Date().toISOString()
     };
     return JSON.stringify(backup, null, 2);

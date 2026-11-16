@@ -1,8 +1,14 @@
 export type Language = 'hi' | 'en' | 'hinglish';
+export type ThemeMode = 'light' | 'dark';
 
 export interface UserProfile {
+  id: string;
+  phone: string;
   name: string;
+  role: 'student' | 'teacher'; // Center Head Teacher or Student
+  centerName?: string;
   language: Language;
+  theme: ThemeMode;
   onboarded: boolean;
   selectedQualities: string[];
   primarySanskarGoal: string;
@@ -13,15 +19,53 @@ export interface UserProfile {
   customInspirationPhoto?: string;
   fontScale?: 'sm' | 'base' | 'lg' | 'xl';
   ttsSpeed?: number;
-  reminderPreferences: {
-    morning: boolean;
-    amritvela: boolean;
-    afternoon: boolean;
-    evening: boolean;
-    night: boolean;
-    morningTime: string;
-    nightTime: string;
-  };
+}
+
+export interface StudentProgressSummary {
+  id: string;
+  phone: string;
+  name: string;
+  centerName: string;
+  streakDays: number;
+  completedTodayCount: number;
+  activeSanskar: string;
+  unlockedStampsCount: number;
+  lastActive: string;
+  lastReflection?: string;
+  ratingAverage: number;
+  avatarUrl?: string;
+}
+
+export interface TeacherMessage {
+  id: string;
+  fromTeacherName: string;
+  toStudentId: string;
+  title: string;
+  messageText: string;
+  blessingVardan: string;
+  sentAt: string;
+  read: boolean;
+}
+
+export interface DailyDivineCard {
+  id: string;
+  cardTitle: string;
+  babaGreeting: string; // "मीठे बच्चे..."
+  mainMessage: string;
+  vardan: string;
+  slogan: string;
+  drushtiQuality: string;
+  imageTheme: string;
+}
+
+export interface SpinReward {
+  id: string;
+  type: 'swaman' | 'vardan' | 'shakti';
+  titleHi: string;
+  titleEn: string;
+  descriptionHi: string;
+  color: string;
+  icon: string;
 }
 
 export interface QualityDefinition {

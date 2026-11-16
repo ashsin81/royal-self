@@ -9,6 +9,12 @@
     font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .dark body {
+    background-color: #0F060D;
+    color: #F7F2E2;
   }
 }
 
@@ -25,6 +31,10 @@
 ::-webkit-scrollbar-thumb {
   background: #EDE0BF;
   border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #3D1C38;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -45,8 +55,66 @@
   mix-blend-mode: multiply;
 }
 
-/* Subtle crown and lotus watermark texture */
+/* Royal Pattern watermark texture */
 .royal-pattern {
   background-image: radial-gradient(#94723B 0.75px, transparent 0.75px);
   background-size: 20px 20px;
+}
+
+.dark .royal-pattern {
+  background-image: radial-gradient(rgba(229, 169, 60, 0.15) 0.75px, transparent 0.75px);
+  background-size: 20px 20px;
+}
+
+/* Liquid Glass Utilities */
+.liquid-glass {
+  background: rgba(253, 252, 250, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(223, 200, 150, 0.4);
+  box-shadow: 0 8px 32px 0 rgba(112, 35, 51, 0.05);
+}
+
+.dark .liquid-glass {
+  background: rgba(26, 12, 23, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(223, 200, 150, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* 3D Card Flip styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Divine Golden Shimmer */
+@keyframes divine-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, rgba(223, 200, 150, 0) 0%, rgba(223, 200, 150, 0.3) 50%, rgba(223, 200, 150, 0) 100%);
+  background-size: 200% 100%;
+  animation: divine-shimmer 3s infinite;
+}
+
+@keyframes divine-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-divine-pulse {
+  animation: divine-pulse 4s ease-in-out infinite;
 }

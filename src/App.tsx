@@ -8,6 +8,10 @@ import {
   PassportStamp,
   BaggageItem,
   Language,
+  TeacherMessage,
+  StudentProgressSummary,
+  DailyDivineCard,
+  SpinReward,
 } from './types';
 import { storage } from './utils/storage';
 import { MURLI_LIBRARY } from './data/murliContent';
@@ -19,6 +23,8 @@ import { RescueView } from './components/Rescue/RescueView';
 import { ProgressView } from './components/Progress/ProgressView';
 import { ProfileView } from './components/Profile/ProfileView';
 import { SettingsView } from './components/Settings/SettingsView';
+import { TeacherDashboard } from './components/Teacher/TeacherDashboard';
+import { PhoneLoginModal } from './components/Auth/PhoneLoginModal';
 import { OnboardingModal } from './components/Onboarding/OnboardingModal';
 import { sound } from './utils/audio';
 
@@ -36,9 +42,25 @@ export const App: React.FC = () => {
     storage.getNightReflections()
   );
 
-  // UI Navigation state
+  // Divine guidance, Teacher & Students state
+  const [teacherMessages, setTeacherMessages] = useState<TeacherMessage[]>(() =>
+    storage.getTeacherMessages()
+  );
+  const [students, setStudents] = useState<StudentProgressSummary[]>(() =>
+    storage.getStudents()
+  );
+  const [cardOfTheDay] = useState<DailyDivineCard>(() =>
+    storage.getCardOfTheDay()
+  );
+  const [spinRewardToday, setSpinRewardToday] = useState<SpinReward | null>(() =>
+    storage.getSpinRewardToday()
+  );
+
+  // UI Navigation & Modals state
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [showOnboarding, setShowOnboarding] = useState<boolean>(!profile.onboarded);
+  const [showPhoneLoginModal, setShowPhoneLoginModal] = useState<boolean>(false);
+  const [isTeacherModeActive, setIsTeacherModeActive] = useState<boolean>(profile.role === 'teacher');
   const [selectedRescueSituationId, setSelectedRescueSituationId] = useState<string | undefined>(undefined);
 
   // Sync state changes to storage
@@ -57,6 +79,15 @@ export const App: React.FC = () => {
   useEffect(() => {
     storage.setBaggage(baggage);
   }, [baggage]);
+
+  // Sync dark theme class on document element
+  useEffect(() => {
+    if (profile.theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [profile.theme]);
 
   // Dynamic Font Scaling
   useEffect(() => {
@@ -139,6 +170,37 @@ export const App: React.FC = () => {
     setProfile((prev) => ({ ...prev, primarySanskarGoal: goal.newSanskar }));
   };
 
+  // Divine Guidance & Teacher Actions
+  const handleSaveSpinReward = (reward: SpinReward) => {
+    storage.saveSpinRewardToday(reward);
+    setSpinRewardToday(reward);
+  };
+
+  const handleMarkTeacherMessageRead = (id: string) => {
+    storage.markTeacherMessageRead(id);
+    setTeacherMessages(storage.getTeacherMessages());
+  };
+
+  const handleSendTeacherMessage = (msg: TeacherMessage) => {
+    storage.addTeacherMessage(msg);
+    setTeacherMessages(storage.getTeacherMessages());
+  };
+
+  // Phone Login Success
+  const handleLoginSuccess = (updatedProfile: UserProfile) => {
+    setProfile(updatedProfile);
+    setIsTeacherModeActive(updatedProfile.role === 'teacher');
+    setShowPhoneLoginModal(false);
+  };
+
+  // Theme toggle
+  const handleToggleTheme = () => {
+    setProfile((prev) => ({
+      ...prev,
+      theme: prev.theme === 'dark' ? 'light' : 'dark'
+    }));
+  };
+
   // Rescue shortcut from Home
   const handleSelectRescueSituation = (situationId: string) => {
     setSelectedRescueSituationId(situationId);
@@ -167,6 +229,8 @@ export const App: React.FC = () => {
       setBaggage(storage.getBaggage());
       setRescueSessions(storage.getRescueSessions());
       setNightReflections(storage.getNightReflections());
+      setTeacherMessages(storage.getTeacherMessages());
+      setStudents(storage.getStudents());
       alert('डेटा सफलतापूर्वक पुनर्प्राप्त (Restored) किया गया!');
     } else {
       alert('अमान्य बैकअप फ़ाइल।');
@@ -183,6 +247,8 @@ export const App: React.FC = () => {
       setBaggage(storage.getBaggage());
       setRescueSessions(storage.getRescueSessions());
       setNightReflections(storage.getNightReflections());
+      setTeacherMessages(storage.getTeacherMessages());
+      setStudents(storage.getStudents());
       setShowOnboarding(true);
     }
   };
@@ -192,97 +258,136 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-ivory-200 text-spiritual-dark font-sans flex flex-col selection:bg-maroon-100 selection:text-maroon-900">
+    <div className="min-h-screen bg-ivory-200 dark:bg-celestial-dark text-spiritual-dark dark:text-gold-100 font-sans flex flex-col selection:bg-maroon-100 selection:text-maroon-900 transition-colors">
       {/* Top App Bar Header */}
       <Header
         profile={profile}
-        onOpenProfile={() => setActiveTab('profile')}
-        onOpenSettings={() => setActiveTab('settings')}
+        isTeacherModeActive={isTeacherModeActive}
+        onOpenProfile={() => {
+          setIsTeacherModeActive(false);
+          setActiveTab('profile');
+        }}
+        onOpenSettings={() => {
+          setIsTeacherModeActive(false);
+          setActiveTab('settings');
+        }}
+        onOpenLogin={() => setShowPhoneLoginModal(true)}
+        onToggleTeacherMode={() => setIsTeacherModeActive(!isTeacherModeActive)}
+        onToggleTheme={handleToggleTheme}
         onLanguageChange={handleLanguageChange}
       />
 
-      {/* Main Content Area - Mobile-first 390px centered container with desktop comfort */}
+      {/* Main Content Area - Mobile-first 420px container with desktop ease */}
       <main className="flex-1 w-full max-w-md mx-auto px-4 py-3 sm:px-5">
-        {activeTab === 'home' && (
-          <HomeView
-            profile={profile}
-            practice={practice}
-            dailyMurli={MURLI_LIBRARY[0]}
-            activeGoal={goals[0]}
-            rescueCount={rescueSessions.length}
-            reflectionsCount={nightReflections.length}
-            onTogglePracticeItem={handleTogglePracticeItem}
-            onNavigateTab={(tab) => {
-              if (tab === 'rescue') setSelectedRescueSituationId(undefined);
-              setActiveTab(tab);
-            }}
-            onSelectRescueSituation={handleSelectRescueSituation}
+        {/* If Center Incharge Teacher mode is active, show the Teacher Portal */}
+        {isTeacherModeActive ? (
+          <TeacherDashboard
+            teacherProfile={profile}
+            students={students}
+            messages={teacherMessages}
+            onSendMessage={handleSendTeacherMessage}
+            onSwitchToStudentMode={() => setIsTeacherModeActive(false)}
           />
-        )}
+        ) : (
+          <>
+            {activeTab === 'home' && (
+              <HomeView
+                profile={profile}
+                practice={practice}
+                dailyMurli={MURLI_LIBRARY[0]}
+                activeGoal={goals[0]}
+                rescueCount={rescueSessions.length}
+                reflectionsCount={nightReflections.length}
+                teacherMessages={teacherMessages}
+                cardOfTheDay={cardOfTheDay}
+                spinRewardToday={spinRewardToday}
+                onSaveSpinReward={handleSaveSpinReward}
+                onMarkMessageRead={handleMarkTeacherMessageRead}
+                onTogglePracticeItem={handleTogglePracticeItem}
+                onNavigateTab={(tab) => {
+                  if (tab === 'rescue') setSelectedRescueSituationId(undefined);
+                  setActiveTab(tab);
+                }}
+                onSelectRescueSituation={handleSelectRescueSituation}
+              />
+            )}
 
-        {activeTab === 'practice' && (
-          <PracticeView
-            practice={practice}
-            onToggleItem={handleTogglePracticeItem}
-            onSaveNightReflection={handleSaveNightReflection}
-            existingReflection={nightReflections[0]}
-          />
-        )}
+            {activeTab === 'practice' && (
+              <PracticeView
+                practice={practice}
+                onToggleItem={handleTogglePracticeItem}
+                onSaveNightReflection={handleSaveNightReflection}
+                existingReflection={nightReflections[0]}
+              />
+            )}
 
-        {activeTab === 'rescue' && (
-          <RescueView
-            profile={profile}
-            initialSelectedSituationId={selectedRescueSituationId}
-            onSaveSession={handleSaveRescueSession}
-          />
-        )}
+            {activeTab === 'rescue' && (
+              <RescueView
+                profile={profile}
+                initialSelectedSituationId={selectedRescueSituationId}
+                onSaveSession={handleSaveRescueSession}
+              />
+            )}
 
-        {activeTab === 'progress' && (
-          <ProgressView
-            stamps={stamps}
-            baggage={baggage}
-            goals={goals}
-            rescueSessions={rescueSessions}
-            nightReflections={nightReflections}
-            onToggleBaggageRelease={handleToggleBaggageRelease}
-            onSaveGoal={handleSaveGoal}
-          />
-        )}
+            {activeTab === 'progress' && (
+              <ProgressView
+                stamps={stamps}
+                baggage={baggage}
+                goals={goals}
+                rescueSessions={rescueSessions}
+                nightReflections={nightReflections}
+                onToggleBaggageRelease={handleToggleBaggageRelease}
+                onSaveGoal={handleSaveGoal}
+              />
+            )}
 
-        {activeTab === 'profile' && (
-          <ProfileView
-            profile={profile}
-            onUpdateProfile={setProfile}
-            onRetakeOnboarding={() => setShowOnboarding(true)}
-            onOpenSettings={() => setActiveTab('settings')}
-            onExportData={handleExportData}
-            onImportData={handleImportData}
-            onResetData={handleResetData}
-          />
-        )}
+            {activeTab === 'profile' && (
+              <ProfileView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onRetakeOnboarding={() => setShowOnboarding(true)}
+                onOpenSettings={() => setActiveTab('settings')}
+                onExportData={handleExportData}
+                onImportData={handleImportData}
+                onResetData={handleResetData}
+              />
+            )}
 
-        {activeTab === 'settings' && (
-          <SettingsView
-            profile={profile}
-            onUpdateProfile={setProfile}
-            onExportData={handleExportData}
-            onImportData={handleImportData}
-            onResetData={handleResetData}
-            onRetakeOnboarding={() => setShowOnboarding(true)}
-          />
+            {activeTab === 'settings' && (
+              <SettingsView
+                profile={profile}
+                onUpdateProfile={setProfile}
+                onExportData={handleExportData}
+                onImportData={handleImportData}
+                onResetData={handleResetData}
+                onRetakeOnboarding={() => setShowOnboarding(true)}
+              />
+            )}
+          </>
         )}
       </main>
 
-      {/* Fixed Bottom Navigation Bar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={(tab) => {
-          if (tab === 'rescue') setSelectedRescueSituationId(undefined);
-          sound.playSoftClick();
-          setActiveTab(tab);
-        }}
-        language={profile.language}
-      />
+      {/* Fixed Bottom Navigation Bar (Hidden when in Teacher Incharge mode for focused oversight) */}
+      {!isTeacherModeActive && (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={(tab) => {
+            if (tab === 'rescue') setSelectedRescueSituationId(undefined);
+            sound.playSoftClick();
+            setActiveTab(tab);
+          }}
+          language={profile.language}
+        />
+      )}
+
+      {/* Phone Login & Role Switching Modal */}
+      {showPhoneLoginModal && (
+        <PhoneLoginModal
+          currentProfile={profile}
+          onLoginSuccess={handleLoginSuccess}
+          onClose={() => setShowPhoneLoginModal(false)}
+        />
+      )}
 
       {/* Onboarding Experience Modal */}
       {showOnboarding && (
