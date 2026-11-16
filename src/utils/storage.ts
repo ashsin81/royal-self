@@ -43,6 +43,10 @@ export const storage = {
       challenges: ['क्रोध और चिड़चिड़ापन', 'व्यर्थ संकल्प और Overthinking'],
       signatureName: 'स्वराज्य अधिकारी',
       signedDate: getTodayDateString(),
+      avatarUrl: '',
+      customInspirationPhoto: '',
+      fontScale: 'base',
+      ttsSpeed: 0.95,
       reminderPreferences: {
         morning: true,
         amritvela: true,

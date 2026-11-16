@@ -18,6 +18,7 @@ interface ProfileViewProps {
   profile: UserProfile;
   onUpdateProfile: (profile: UserProfile) => void;
   onRetakeOnboarding: () => void;
+  onOpenSettings: () => void;
   onExportData: () => void;
   onImportData: (jsonStr: string) => void;
   onResetData: () => void;
@@ -27,6 +28,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   profile,
   onUpdateProfile,
   onRetakeOnboarding,
+  onOpenSettings,
   onExportData,
   onImportData,
   onResetData,
@@ -96,16 +98,24 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   return (
     <div className="space-y-4 pb-20">
       {/* Header */}
-      <div>
-        <span className="text-[10px] font-serif uppercase tracking-widest text-gold-700 font-bold">
-          आध्यात्मिक परिचय • SWARAJYA PASSPORT
-        </span>
-        <h2 className="text-xl sm:text-2xl font-bold font-hindi text-maroon-900 tracking-tight">
-          मेरा आध्यात्मिक प्रोफ़ाइल
-        </h2>
-        <p className="text-xs text-spiritual-muted font-hindi">
-          मेरी राजाई पहचान, स्वराज्य घोषणा-पत्र एवं व्यक्तिगत सेटिंग्स।
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="text-[10px] font-serif uppercase tracking-widest text-gold-700 font-bold">
+            आध्यात्मिक परिचय • SWARAJYA PASSPORT
+          </span>
+          <h2 className="text-xl sm:text-2xl font-bold font-hindi text-maroon-900 tracking-tight">
+            मेरा आध्यात्मिक प्रोफ़ाइल
+          </h2>
+          <p className="text-xs text-spiritual-muted font-hindi">
+            मेरी राजाई पहचान, स्वराज्य घोषणा-पत्र एवं सेटिंग्स।
+          </p>
+        </div>
+        <button
+          onClick={onOpenSettings}
+          className="px-3 py-1.5 bg-ivory-100 hover:bg-gold-100 text-maroon-900 border border-gold-300 rounded-xl text-xs font-bold font-hindi flex items-center gap-1 shadow-2xs"
+        >
+          <span>⚙️ सेटिंग्स</span>
+        </button>
       </div>
 
       {/* The Royal Passport Component */}
@@ -115,6 +125,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           sound.playSoftClick();
           setShowDeclarationModal(true);
         }}
+        onOpenSettings={onOpenSettings}
       />
 
       {/* My Higher Self & Swaman Details */}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Home, Sparkles, LifeBuoy, TrendingUp, UserCheck } from 'lucide-react';
 
-export type TabType = 'home' | 'practice' | 'rescue' | 'progress' | 'profile';
+export type TabType = 'home' | 'practice' | 'rescue' | 'progress' | 'profile' | 'settings';
 
 interface NavbarProps {
   activeTab: TabType;

@@ -9,6 +9,10 @@ export interface UserProfile {
   challenges: string[];
   signatureName: string;
   signedDate: string;
+  avatarUrl?: string;
+  customInspirationPhoto?: string;
+  fontScale?: 'sm' | 'base' | 'lg' | 'xl';
+  ttsSpeed?: number;
   reminderPreferences: {
     morning: boolean;
     amritvela: boolean;

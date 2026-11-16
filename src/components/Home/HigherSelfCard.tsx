@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../../types';
-import { Sparkles, Sun, X } from 'lucide-react';
+import { Sparkles, Sun, X, Volume2 } from 'lucide-react';
 import { sound } from '../../utils/audio';
+import { tts } from '../../utils/tts';
 
 interface HigherSelfCardProps {
   profile: UserProfile;
@@ -13,6 +14,11 @@ export const HigherSelfCard: React.FC<HigherSelfCardProps> = ({ profile }) => {
   const handleOpenSwaman = () => {
     sound.playTibetanBowl();
     setShowSwamanModal(true);
+  };
+
+  const handleListenSwaman = () => {
+    const textToSpeak = `मैं एक शांत, शक्तिशाली और पवित्र आत्मा हूँ। मेरे सक्रिय स्वरूप हैं: ${qualities.join(', ')}। ओम शांति।`;
+    tts.toggle(textToSpeak, profile.language, profile.ttsSpeed || 0.95);
   };
 
   const qualities = profile.selectedQualities?.length
@@ -54,17 +60,22 @@ export const HigherSelfCard: React.FC<HigherSelfCardProps> = ({ profile }) => {
             ))}
           </div>
 
-          <div className="pt-2 flex items-center justify-between">
+          <div className="pt-2 flex items-center gap-2">
             <button
               onClick={handleOpenSwaman}
-              className="px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-maroon-950 font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 active:scale-95"
+              className="px-3.5 py-2 bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-maroon-950 font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5 active:scale-95"
             >
               <Sun className="w-3.5 h-3.5 text-maroon-900" />
               <span>स्वमान अनुभव करें</span>
             </button>
-            <span className="text-[10px] text-gold-300/70 font-serif italic">
-              अनादि • आदि • सम्पूर्ण
-            </span>
+            <button
+              onClick={handleListenSwaman}
+              title="स्वमान सुनें (Read Aloud)"
+              className="px-3 py-2 bg-white/15 hover:bg-white/25 text-gold-100 border border-gold-300/40 rounded-xl text-xs font-semibold font-hindi transition-all flex items-center gap-1.5 active:scale-95"
+            >
+              <Volume2 className="w-3.5 h-3.5 text-gold-300" />
+              <span>सुनें</span>
+            </button>
           </div>
         </div>
       </div>

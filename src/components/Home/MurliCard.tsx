@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MurliContentItem } from '../../types';
-import { BookOpen, CheckCircle, Sparkles } from 'lucide-react';
+import { BookOpen, CheckCircle, Sparkles, Volume2, VolumeX } from 'lucide-react';
+import { tts } from '../../utils/tts';
 
 interface MurliCardProps {
   item: MurliContentItem;
@@ -8,6 +9,18 @@ interface MurliCardProps {
 }
 
 export const MurliCard: React.FC<MurliCardProps> = ({ item, onNavigateLibrary }) => {
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+
+  useEffect(() => {
+    return tts.subscribe((speaking, text) => {
+      setIsSpeaking(speaking && text.includes(item.title));
+    });
+  }, [item.title]);
+
+  const handleListen = () => {
+    const speechText = `${item.title}। महावाक्य: ${item.originalExcerpt}। सरल अर्थ: ${item.explanation}। जीवन में प्रयोग: ${item.practicalApplication}।`;
+    tts.toggle(speechText, 'hi');
+  };
   return (
     <div className="bg-white rounded-2xl p-5 border border-gold-200/90 shadow-royal space-y-3.5">
       <div className="flex items-center justify-between">
@@ -15,9 +28,23 @@ export const MurliCard: React.FC<MurliCardProps> = ({ item, onNavigateLibrary })
           <BookOpen className="w-4 h-4 text-maroon-700" />
           <span>आज की धारणा • Daily Murli</span>
         </div>
-        <div className="flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
-          <CheckCircle className="w-3 h-3 text-emerald-600" />
-          <span>प्रमाणित (Verified)</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleListen}
+            title={isSpeaking ? 'वाचन रोकें' : 'मुरली धारणा सुनें'}
+            className={`px-2 py-0.5 rounded-full text-[10px] font-hindi font-bold flex items-center gap-1 transition-all ${
+              isSpeaking
+                ? 'bg-rose-100 text-rose-800 ring-1 ring-rose-400 animate-pulse'
+                : 'bg-gold-50 text-maroon-800 border border-gold-200 hover:bg-gold-100'
+            }`}
+          >
+            {isSpeaking ? <VolumeX className="w-3 h-3 text-rose-700" /> : <Volume2 className="w-3 h-3 text-gold-600" />}
+            <span>{isSpeaking ? 'रोकें' : 'सुनें'}</span>
+          </button>
+          <div className="flex items-center gap-1 text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
+            <CheckCircle className="w-3 h-3 text-emerald-600" />
+            <span>प्रमाणित</span>
+          </div>
         </div>
       </div>
 

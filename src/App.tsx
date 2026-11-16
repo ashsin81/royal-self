@@ -18,6 +18,7 @@ import { PracticeView } from './components/Practice/PracticeView';
 import { RescueView } from './components/Rescue/RescueView';
 import { ProgressView } from './components/Progress/ProgressView';
 import { ProfileView } from './components/Profile/ProfileView';
+import { SettingsView } from './components/Settings/SettingsView';
 import { OnboardingModal } from './components/Onboarding/OnboardingModal';
 import { sound } from './utils/audio';
 
@@ -56,6 +57,18 @@ export const App: React.FC = () => {
   useEffect(() => {
     storage.setBaggage(baggage);
   }, [baggage]);
+
+  // Dynamic Font Scaling
+  useEffect(() => {
+    const fontMap: Record<string, string> = {
+      sm: '14.5px',
+      base: '16px',
+      lg: '18px',
+      xl: '20px'
+    };
+    const size = fontMap[profile.fontScale || 'base'] || '16px';
+    document.documentElement.style.fontSize = size;
+  }, [profile.fontScale]);
 
   // Practice toggling
   const handleTogglePracticeItem = (key: keyof DailyPracticeState) => {
@@ -184,6 +197,7 @@ export const App: React.FC = () => {
       <Header
         profile={profile}
         onOpenProfile={() => setActiveTab('profile')}
+        onOpenSettings={() => setActiveTab('settings')}
         onLanguageChange={handleLanguageChange}
       />
 
@@ -240,9 +254,21 @@ export const App: React.FC = () => {
             profile={profile}
             onUpdateProfile={setProfile}
             onRetakeOnboarding={() => setShowOnboarding(true)}
+            onOpenSettings={() => setActiveTab('settings')}
             onExportData={handleExportData}
             onImportData={handleImportData}
             onResetData={handleResetData}
+          />
+        )}
+
+        {activeTab === 'settings' && (
+          <SettingsView
+            profile={profile}
+            onUpdateProfile={setProfile}
+            onExportData={handleExportData}
+            onImportData={handleImportData}
+            onResetData={handleResetData}
+            onRetakeOnboarding={() => setShowOnboarding(true)}
           />
         )}
       </main>

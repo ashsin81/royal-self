@@ -1,13 +1,14 @@
 import React from 'react';
 import { UserProfile } from '../../types';
-import { Award, Compass, FileText } from 'lucide-react';
+import { Award, Compass, FileText, Camera } from 'lucide-react';
 
 interface PassportCardProps {
   profile: UserProfile;
   onOpenDeclaration: () => void;
+  onOpenSettings?: () => void;
 }
 
-export const PassportCard: React.FC<PassportCardProps> = ({ profile, onOpenDeclaration }) => {
+export const PassportCard: React.FC<PassportCardProps> = ({ profile, onOpenDeclaration, onOpenSettings }) => {
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-ivory-50 via-white to-gold-50/70 border-4 border-gold-400 p-5 sm:p-6 shadow-royal-lg text-spiritual-dark space-y-4">
       {/* Golden Corner Accents */}
@@ -21,9 +22,35 @@ export const PassportCard: React.FC<PassportCardProps> = ({ profile, onOpenDecla
         <span className="text-[10px] uppercase font-serif tracking-widest text-gold-700 font-bold block">
           SPIRITUAL SELF-DEVELOPMENT PASSPORT
         </span>
-        <div className="w-12 h-12 mx-auto rounded-full bg-maroon-700 border-2 border-gold-400 flex items-center justify-center text-xl shadow-md my-1">
-          👑
+
+        {/* Passport Photo / Royal Emblem */}
+        <div className="relative inline-block my-1">
+          {profile.avatarUrl ? (
+            <img
+              src={profile.avatarUrl}
+              alt="Passport Photo"
+              onClick={onOpenSettings}
+              className="w-16 h-16 mx-auto rounded-full object-cover border-2 border-gold-500 shadow-md ring-4 ring-gold-200 cursor-pointer"
+            />
+          ) : (
+            <div
+              onClick={onOpenSettings}
+              className="w-14 h-14 mx-auto rounded-full bg-maroon-700 border-2 border-gold-400 flex items-center justify-center text-2xl shadow-md cursor-pointer hover:scale-105 transition-transform"
+            >
+              👑
+            </div>
+          )}
+          {onOpenSettings && (
+            <button
+              onClick={onOpenSettings}
+              title="फ़ोटो बदलें"
+              className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-gold-500 text-maroon-950 flex items-center justify-center text-[10px] shadow border border-white"
+            >
+              <Camera className="w-3 h-3" />
+            </button>
+          )}
         </div>
+
         <h2 className="text-xl font-bold font-serif text-maroon-900 tracking-wide">
           THE ROYAL PASSPORT
         </h2>
