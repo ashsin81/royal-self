@@ -226,12 +226,111 @@ export const INITIAL_STUDENTS_PROGRESS: StudentProgressSummary[] = [
 export const INITIAL_TEACHER_MESSAGES: TeacherMessage[] = [
   {
     id: 'msg-1',
-    fromTeacherName: 'बीके आशा दीदी (Center Incharge)',
+    fromTeacherName: 'बापदादा',
     toStudentId: 'current-user',
-    title: 'विशेष दृष्टि एवं आत्मिक शुभकामना',
+    title: 'बापदादा का पावन संदेश एवं दृष्टि',
     messageText: 'मीठे बच्चे, आपके पुरुषार्थ में निरंतरता देखकर बाबा बहुत प्रसन्न हैं। आज विशेष साक्षीपन का अभ्यास करना और हर परिस्थिति में बाबा की छत्रछाया का अनुभव करना।',
     blessingVardan: 'सर्व खजानों से भरपूर, सदा संतुष्ट आत्मा भव।',
     sentAt: 'आज, 08:00 AM',
     read: false
   }
 ];
+
+export interface SpiritualGyanTopic {
+  keywords: string[];
+  babaAnswerHi: string;
+  babaAnswerEn: string;
+  swaman: string;
+  murliQuote: string;
+  actionHomework: string;
+  drishtiQuality: string;
+}
+
+export const SPIRITUAL_GYAN_KNOWLEDGE_BASE: SpiritualGyanTopic[] = [
+  {
+    keywords: ['क्रोध', 'गुस्सा', 'चिड़चिड़ापन', 'anger', 'irritation', 'patience', 'shanti'],
+    babaAnswerHi: 'मीठे बच्चे, क्रोध भूत है जो अपनी ही स्थिति को भस्म कर देता है। जब कोई आत्मा विपरीत व्यवहार करे, तो समझो वह किसी संस्कार के वश परेशान है। उस समय आप दाता बनकर उसे शांति की सकाश दो। अपने शांत स्वरूप में टिक जाओ।',
+    babaAnswerEn: 'Sweet child, anger burns one’s own elevated stage. When someone behaves negatively, realize that soul is bound by old sanskars. Become a benefactor and send pure vibrations of peace.',
+    swaman: 'मैं शांत स्वरूप, सर्व शक्तिमान शिव बाबा का शांतदूत बच्चा हूँ।',
+    murliQuote: 'क्रोध पर विजय पाने की विधि है — सहनशीलता और नम्रता का कवच धारण करना। (अव्यक्त वाणी)',
+    actionHomework: 'आज जब भी मन में कोई उत्तेजना आए, तुरंत 3 सेकण्ड रुक कर बिंदु रूप स्थिति का अनुभव करें।',
+    drishtiQuality: 'शीतल शांत दृष्टि'
+  },
+  {
+    keywords: ['व्यर्थ', 'overthinking', 'चिंता', 'तनाव', 'मन', 'संकल्प', 'stress', 'thoughts', 'fear', 'डर'],
+    babaAnswerHi: 'लाडले बच्चे, व्यर्थ संकल्प बुद्धि की शक्ति को चूस लेते हैं। ड्रामा में जो बीत चुका वह कल्याणकारी था, जो हो रहा है वह भी कल्याणकारी है। सब कुछ बाबा के हाथ में सौंप कर हल्के (Double Light) हो जाओ।',
+    babaAnswerEn: 'Beloved child, wasteful thinking drains the intellect. Whatever has passed in the drama holds supreme welfare. Surrender all burdens to Baba and become Double-Light.',
+    swaman: 'मैं निश्चिंत, विजयी और बाबा की गोदी का बेफिक्र बच्चा हूँ।',
+    murliQuote: 'व्यर्थ संकल्पों को समाप्त करने के लिए बुद्धि को सदैव समर्थ चिंतन और सेवा में व्यस्त रखो।',
+    actionHomework: 'मन में व्यर्थ संकल्प आते ही "फुलस्टॉप ( . )" लगाएं और 5 बार कहें — "बाबा मेरा, मैं बाबा का"।',
+    drishtiQuality: 'निश्चिंत अभय दृष्टि'
+  },
+  {
+    keywords: ['अमृतवेला', 'सुबह', 'नींद', 'आलस्य', 'meditation', 'amritvela', 'laziness', 'wake up'],
+    babaAnswerHi: 'मीठे बच्चे, अमृतवेला परमात्म मिलन और वरदान लूटने की वेला है। रात को सोते समय ही बाबा को शुभ संकल्पों का पत्र देकर सोएं और अलवेलेपन को त्यागें। बाबा स्वयं आपको बुलाने आते हैं।',
+    babaAnswerEn: 'Sweet child, Amritvela is the divine time of receiving boundless blessings from the Supreme. Sleep with elevated thoughts, and Baba Himself will awaken you with love.',
+    swaman: 'मैं अमृतवेले का सच्चा योगी और वरदानी फरिश्ता हूँ।',
+    murliQuote: 'अमृतवेला फाउण्डेशन है। जिसका अमृतवेला शक्तिशाली है, उसका सारा दिन स्वतः निर्विघ्न बीतता है।',
+    actionHomework: 'आज रात सोने से पहले 10 मिनट बाबा से मीठी बातें करें और ठीक समय पर उठने का दृढ़ संकल्प करें।',
+    drishtiQuality: 'उमंग-उत्साह संपन्न दृष्टि'
+  },
+  {
+    keywords: ['संबंध', 'परिवार', 'टकराव', 'रिश्ते', 'बात बुरी लगी', 'relationship', 'family', 'conflict', 'expectation'],
+    babaAnswerHi: 'बच्चे, संबंधों में दुख का कारण है "अपेक्षा"। किसी से कुछ लेने की इच्छा रखने के बजाए, सबको शुभभावना और शुभकामनाएं दो। हर आत्मा का अपना पार्ट है, उन्हें स्वीकार करो।',
+    babaAnswerEn: 'Child, expectation is the root of sorrow in relations. Instead of seeking respect or love from others, become a giver of good wishes and pure vibrations.',
+    swaman: 'मैं सर्व आत्माओं का शुभचिंतक, कल्याणकारी और स्नेही आत्मा हूँ।',
+    murliQuote: 'गुण-ग्राहक बनो, किसी के अवगुणों को मन में न समाओ। जो अवगुण देखता है वह स्वयं भारी हो जाता है।',
+    actionHomework: 'जिस व्यक्ति से खिंचाव हो, उसके 3 विशेष गुण याद कर आज उसे मन से क्षमा और दुआएं दें।',
+    drishtiQuality: 'निःस्वार्थ प्रेम व रहम की दृष्टि'
+  },
+  {
+    keywords: ['तुलना', 'ईर्ष्या', 'अहंकार', 'मान', 'सम्मान', 'ego', 'jealousy', 'comparison', 'respect'],
+    babaAnswerHi: 'मीठे बच्चे, आप बाबा के नयनों के सितारे हो। आपकी अपनी विशिष्ट विशेषता है, किसी से तुलना करके अपने स्वमान को मत गिराओ। मान मांगना भिखारीपन है, स्वमान में रहना राजाई है।',
+    babaAnswerEn: 'Sweet child, you are the jewel of Baba’s eyes. You have unique spiritual virtues. Asking for regard is begging; staying in self-respect is royal sovereignty.',
+    swaman: 'मैं स्वराज्य अधिकारी, स्वमान के आसन पर विराजमान राजऋषि हूँ।',
+    murliQuote: 'सच्चा मान वह है जो निराकारी और निरहंकारी बनकर सर्व की दुआएं प्राप्त करे।',
+    actionHomework: 'आज सारा दिन किसी की प्रशंसा सुनकर ईर्ष्या नहीं, बल्कि "वाह ड्रामा वाह" कहकर दिल से खुशी मनाएं।',
+    drishtiQuality: 'निरहंकारी नम्र दृष्टि'
+  },
+  {
+    keywords: ['निराशा', 'उदास', 'कमजोरी', 'उमंग', 'sadness', 'depression', 'weakness', 'hopeless'],
+    babaAnswerHi: 'बच्चे, सर्वशक्तिमान का बच्चा कभी कमजोर या निराश नहीं हो सकता। माया का काम है हिलाना, और बच्चे का काम है अचल-अडोल रहना। बाबा की भुजाओं में समा जाओ, सारा भारीपन समाप्त हो जाएगा।',
+    babaAnswerEn: 'Child, the progeny of the Almighty can never be weak. Maya’s duty is to test, and your duty is to remain unshakeable. Melt into Baba’s embrace and be refreshed.',
+    swaman: 'मैं मास्टर सर्वशक्तिमान, विजय मेरा जन्मसिद्ध अधिकार है।',
+    murliQuote: 'सदा खुशी में नाचते रहो, उदासी ज्ञान मार्ग का सबसे बड़ा विघ्न है।',
+    actionHomework: 'अभी 2 मिनट के लिए अपने प्रकाशमय फरिश्ते स्वरूप को देखें और बाबा के साथ कम्बाइंड स्थिति का अनुभव करें।',
+    drishtiQuality: 'शक्तियों की सकाश दृष्टि'
+  }
+];
+
+export function getBabaSpiritualAnswer(query: string, language: string = 'hi') {
+  const lower = query.toLowerCase();
+  
+  // Find best matched topic
+  let matched = SPIRITUAL_GYAN_KNOWLEDGE_BASE.find(topic =>
+    topic.keywords.some(kw => lower.includes(kw.toLowerCase()))
+  );
+
+  if (!matched) {
+    matched = {
+      keywords: [],
+      babaAnswerHi: `मीठे बच्चे, आपके मन की हर बात बाबा तक पहुँचती है। इस समय परिस्थिति पर नहीं, अपनी स्वस्थिति पर ध्यान दो। आप देह नहीं, चमकती हुई पवित्र आत्मा हो। सब कुछ बाबा के अर्पण कर निश्चिंत हो जाओ।`,
+      babaAnswerEn: `Sweet child, every thought in your pure heart reaches Baba. Focus on your inner soul consciousness rather than external situations. Surrender all to Baba and remain peaceful.`,
+      swaman: 'मैं बाबा का लाडला, शांत और पवित्र स्वरूप फरिश्ता हूँ।',
+      murliQuote: 'याद रखो, जो बच्चे बाप के बनकर रहते हैं, उनका हर कदम कल्याणकारी होता है। (मुरली)',
+      actionHomework: 'आज दिनभर में 5 बार 1-1 मिनट के लिए ट्रैफिक कंट्रोल कर बापदादा के स्नेह में लीन हो जाएं।',
+      drishtiQuality: 'परम पवित्र सकाश दृष्टि'
+    };
+  }
+
+  return {
+    id: `baba-ans-${Date.now()}`,
+    sender: 'baba' as const,
+    text: language === 'en' ? matched.babaAnswerEn : matched.babaAnswerHi,
+    swaman: matched.swaman,
+    murliQuote: matched.murliQuote,
+    actionHomework: matched.actionHomework,
+    drishtiQuality: matched.drishtiQuality,
+    timestamp: 'अभी (Now)'
+  };
+}

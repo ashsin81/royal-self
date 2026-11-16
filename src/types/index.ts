@@ -19,6 +19,19 @@ export interface UserProfile {
   customInspirationPhoto?: string;
   fontScale?: 'sm' | 'base' | 'lg' | 'xl';
   ttsSpeed?: number;
+  geminiApiKey?: string;
+  adminPin?: string;
+}
+
+export interface AskBabaMessage {
+  id: string;
+  sender: 'user' | 'baba';
+  text: string;
+  swaman?: string;
+  murliQuote?: string;
+  actionHomework?: string;
+  drishtiQuality?: string;
+  timestamp: string;
 }
 
 export interface StudentProgressSummary {

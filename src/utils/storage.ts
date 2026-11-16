@@ -76,8 +76,7 @@ export const storage = {
       if (data) return JSON.parse(data);
     } catch {}
     return [
-      { phone: '9876543210', name: 'राजयोगी आत्मा (Student)', role: 'student' },
-      { phone: '9800000000', name: 'बीके आशा दीदी (Center Incharge)', role: 'teacher' }
+      { phone: '9876543210', name: 'राजयोगी आत्मा', role: 'student' }
     ];
   },
 

@@ -11,7 +11,9 @@ import {
   Search,
   Heart,
   Shield,
-  X
+  X,
+  Copy,
+  Check
 } from 'lucide-react';
 import { sound } from '../../utils/audio';
 import confetti from 'canvas-confetti';
@@ -39,6 +41,15 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [selectedBlessing, setSelectedBlessing] = useState<string>(
     'सर्व खजानों से भरपूर, सदा संतुष्ट आत्मा भव।'
   );
+  const [isCopied, setIsCopied] = useState<boolean>(false);
+
+  const handleCopyAdminLink = () => {
+    const link = window.location.origin + window.location.pathname + '#admin';
+    navigator.clipboard.writeText(link);
+    setIsCopied(true);
+    sound.playSoftClick();
+    setTimeout(() => setIsCopied(false), 2500);
+  };
 
   const blessingPresets = [
     'सर्व खजानों से भरपूर, सदा संतुष्ट आत्मा भव।',
@@ -73,7 +84,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
     const newMsg: TeacherMessage = {
       id: 'msg-' + Date.now(),
-      fromTeacherName: teacherProfile.name || 'बीके दीदी (Center Head)',
+      fromTeacherName: 'बापदादा',
       toStudentId: selectedStudent.id,
       title: messageTitle,
       messageText: messageText.trim(),
@@ -100,7 +111,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 सेवाकेंद्र प्रभारी डैशबोर्ड • CENTER HEAD PORTAL
               </span>
               <h2 className="text-base sm:text-lg font-bold font-hindi text-white">
-                {teacherProfile.name || 'बीके आशा दीदी'}
+                {teacherProfile.name || 'सेवाकेंद्र व्यवस्थापक'}
               </h2>
             </div>
           </div>
@@ -135,6 +146,21 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             <span className="text-[10px] text-gold-300 block">प्रेषित दृष्टि</span>
             <span className="text-sm font-bold font-serif text-rose-200">{messages.length}</span>
           </div>
+        </div>
+
+        {/* Secret Admin Direct Link notice */}
+        <div className="bg-amber-500/20 border border-amber-400/40 p-2.5 rounded-xl flex items-center justify-between gap-2 text-xs font-hindi">
+          <div className="truncate">
+            <span className="text-[10px] text-amber-300 font-bold block">🔒 आपका गुप्त एडमिन लिंक (Direct Link):</span>
+            <span className="text-amber-100 font-mono text-[11px] truncate block">...#admin (पिन: 108)</span>
+          </div>
+          <button
+            onClick={handleCopyAdminLink}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-maroon-950 font-bold text-[11px] transition-colors flex-shrink-0"
+          >
+            {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-950" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{isCopied ? 'कॉपी हुआ' : 'लिंक कॉपी'}</span>
+          </button>
         </div>
       </div>
 

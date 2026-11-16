@@ -136,41 +136,12 @@ export const PhoneLoginModal: React.FC<PhoneLoginModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder="उदा. राजयोगी आत्मा, बीके आशा दीदी..."
+              placeholder="उदा. राजयोगी आत्मा..."
               className="w-full px-3 py-2 text-xs border border-gold-300 dark:border-gold-700 rounded-xl bg-white dark:bg-maroon-900 font-hindi text-spiritual-dark dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-maroon-700"
             />
           </div>
 
-          {/* Role selector */}
-          <div>
-            <label className="block text-xs font-semibold text-spiritual-dark dark:text-gray-300 mb-1 font-hindi">
-              भूमिका (Account Role):
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setRole('student')}
-                className={`py-2 px-2 rounded-xl text-xs font-hindi border transition-all ${
-                  role === 'student'
-                    ? 'bg-maroon-700 text-gold-100 font-bold border-maroon-700 shadow-xs'
-                    : 'bg-white dark:bg-maroon-900 text-spiritual-dark dark:text-gray-300 border-gold-200'
-                }`}
-              >
-                🕊️ विद्यार्थी (Student)
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('teacher')}
-                className={`py-2 px-2 rounded-xl text-xs font-hindi border transition-all ${
-                  role === 'teacher'
-                    ? 'bg-maroon-700 text-gold-100 font-bold border-maroon-700 shadow-xs'
-                    : 'bg-white dark:bg-maroon-900 text-spiritual-dark dark:text-gray-300 border-gold-200'
-                }`}
-              >
-                👑 सेवाकेंद्र प्रभारी (Teacher)
-              </button>
-            </div>
-          </div>
+
 
           {role === 'teacher' && (
             <div>

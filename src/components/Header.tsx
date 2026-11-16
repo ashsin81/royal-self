@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { UserProfile } from '../types';
-import { Volume2, VolumeX, Settings, ShieldCheck, Sun, Moon, Phone, GraduationCap, Sparkles } from 'lucide-react';
+import { Volume2, VolumeX, Settings, ShieldCheck, Sun, Moon, Phone, Sparkles, MessageCircleQuestion } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { tts } from '../utils/tts';
 
@@ -10,18 +10,17 @@ interface HeaderProps {
   onOpenProfile: () => void;
   onOpenSettings: () => void;
   onOpenLogin: () => void;
-  onToggleTeacherMode: () => void;
+  onOpenAskBaba: () => void;
   onToggleTheme: () => void;
   onLanguageChange: (lang: 'hi' | 'en' | 'hinglish') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   profile,
-  isTeacherModeActive,
   onOpenProfile,
   onOpenSettings,
   onOpenLogin,
-  onToggleTeacherMode,
+  onOpenAskBaba,
   onToggleTheme,
 }) => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
@@ -75,24 +74,9 @@ export const Header: React.FC<HeaderProps> = ({
               <h1 className="font-serif font-black tracking-widest text-xs sm:text-sm text-maroon-800 dark:text-gold-200 leading-none">
                 ROYAL SELF
               </h1>
-              {profile.role === 'teacher' ? (
-                <button
-                  onClick={onToggleTeacherMode}
-                  className={`text-[9px] px-1.5 py-0.5 rounded font-bold transition-all flex items-center gap-1 ${
-                    isTeacherModeActive
-                      ? 'bg-purple-600 text-white shadow-xs animate-pulse'
-                      : 'bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 border border-purple-300/60'
-                  }`}
-                  title="सेवाकेंद्र प्रभारी पोर्टल बदलें"
-                >
-                  <GraduationCap className="w-3 h-3" />
-                  <span>प्रभारी</span>
-                </button>
-              ) : (
-                <span className="text-[10px] bg-gold-100 dark:bg-gold-950/80 text-gold-700 dark:text-gold-300 px-1.5 py-0.2 rounded font-semibold border border-gold-300/60">
-                  स्वराज्य
-                </span>
-              )}
+              <span className="text-[10px] bg-gold-100 dark:bg-gold-950/80 text-gold-700 dark:text-gold-300 px-1.5 py-0.2 rounded font-semibold border border-gold-300/60">
+                स्वराज्य
+              </span>
             </div>
             <p className="text-[10px] text-spiritual-muted dark:text-gold-300/70 font-hindi font-medium">
               राजाई स्वराज्य साथी • BK Purusharth
@@ -102,6 +86,20 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action icons & controls */}
         <div className="flex items-center gap-1">
+          {/* Ask Baba AI Action Button */}
+          <button
+            onClick={() => {
+              sound.playTibetanBowl();
+              onOpenAskBaba();
+            }}
+            title="बाबा से पूछें (Ask Baba AI Guidance)"
+            className="px-2 py-1 bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white rounded-xl text-[11px] font-hindi font-bold shadow-md shadow-amber-500/20 hover:opacity-95 flex items-center gap-1 animate-pulse transition-all transform active:scale-95"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-200" />
+            <span className="hidden sm:inline">बाबा से पूछें</span>
+            <span className="sm:hidden">AI</span>
+          </button>
+
           {/* Theme Toggle (Sun/Moon) */}
           <button
             onClick={onToggleTheme}
@@ -130,19 +128,6 @@ export const Header: React.FC<HeaderProps> = ({
             className="p-1.5 rounded-lg text-spiritual-muted dark:text-gold-300 hover:text-maroon-700 dark:hover:text-gold-100 hover:bg-gold-50 dark:hover:bg-celestial-surface transition-colors"
           >
             <Volume2 className="w-4 h-4" />
-          </button>
-
-          {/* Text-to-Speech Toggle Button */}
-          <button
-            onClick={handleToggleSpeech}
-            title={isSpeaking ? "वाचन रोकें (Stop Reading)" : "आवाज़ में सुनें (Read Aloud)"}
-            className={`p-1.5 rounded-lg transition-all ${
-              isSpeaking
-                ? 'bg-rose-100 text-rose-700 ring-2 ring-rose-400 animate-pulse'
-                : 'text-spiritual-muted dark:text-gold-300 hover:text-maroon-700 dark:hover:text-gold-100 hover:bg-gold-50 dark:hover:bg-celestial-surface'
-            }`}
-          >
-            {isSpeaking ? <VolumeX className="w-4 h-4 text-rose-700" /> : <Sparkles className="w-4 h-4 text-gold-600 dark:text-gold-400" />}
           </button>
 
           {/* Settings Button */}
