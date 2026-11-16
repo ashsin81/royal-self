@@ -28,6 +28,7 @@ import confetti from 'canvas-confetti';
 
 const CHAT_STORAGE_KEY = 'baba_se_pooche_messages_v1';
 const API_KEY_STORAGE = 'baba_se_pooche_gemini_key';
+const SEARCH_STORAGE_KEY = 'baba_se_pooche_google_search';
 
 export const BabaChatView: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>(() => {
@@ -49,7 +50,8 @@ export const BabaChatView: React.FC = () => {
           swaman: 'मैं सर्वशक्तिमान शिव बाबा का लाडला, अति स्नेही और शांत स्वरूप बच्चा हूँ।',
           vardan: 'सदा बाप की छत्रछाया में सुरक्षित रहकर माया के सर्व विघ्नों पर विजयी भव।',
           actionHomework: 'अभी 1 मिनट के लिए सब कुछ भूलकर अपने मस्तक के बीच चमकते सितारे को देखें और शिवबाबा के सम्मुख बैठ जाएं।',
-          timestamp: 'अभी (Now)'
+          timestamp: 'अभी (Now)',
+          aiEngine: 'bk-semantic'
         },
         timestamp: 'अभी (Now)'
       }
@@ -60,6 +62,10 @@ export const BabaChatView: React.FC = () => {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [language, setLanguage] = useState<'hi' | 'en' | 'hinglish'>('hi');
   const [apiKey, setApiKey] = useState<string>(() => localStorage.getItem(API_KEY_STORAGE) || '');
+  const [enableGoogleSearch, setEnableGoogleSearch] = useState<boolean>(() => {
+    const saved = localStorage.getItem(SEARCH_STORAGE_KEY);
+    return saved !== null ? saved === 'true' : true;
+  });
   const [showKeyModal, setShowKeyModal] = useState<boolean>(false);
   const [tempKeyInput, setTempKeyInput] = useState<string>(apiKey);
   const [isMusicPlaying, setIsMusicPlaying] = useState<boolean>(false);
@@ -97,8 +103,10 @@ export const BabaChatView: React.FC = () => {
   }, [messages, isTyping]);
 
   const quickPrompts = [
+    { label: '📅 आज की मुरली का सार', query: 'बाबा, आज की मुरली का मुख्य सार और धारणा के लिए मुख्य बिंदु क्या है?' },
     { label: '🕊️ मन शांत कैसे रखें?', query: 'बाबा, मन में बहुत व्यर्थ संकल्प चल रहे हैं, मन को शांत और एकाग्र कैसे रखें?' },
     { label: '🔥 क्रोध पर विजय', query: 'बाबा, जब कोई अपमान या विपरीत व्यवहार करे, तो क्रोध और चिड़चिड़ापन कैसे समाप्त करें?' },
+    { label: '🏛️ माउंट आबू शांतिवन', query: 'बाबा, माउंट आबू और शांतिवन मधुबन का आध्यात्मिक इतिहास व महत्व क्या है?' },
     { label: '🤝 संबंधों में टकराव', query: 'बाबा, परिवार और संबंधों में कड़वाहट और टकराव को प्यार में कैसे बदलें?' },
     { label: '☀️ शक्तिशाली अमृतवेला', query: 'बाबा, अमृतवेले नींद और आलस्य आता है, अमृतवेला शक्तिशाली कैसे बनाएं?' },
     { label: '⚖️ कर्मों का हिसाब', query: 'बाबा, जीवन में अचानक आने वाले कष्ट और बीमारी का कार्मिक हिसाब कैसे चुक्तू करें?' },
@@ -125,8 +133,8 @@ export const BabaChatView: React.FC = () => {
     setIsTyping(true);
 
     try {
-      // Call real-time Baba AI service (Gemini if key provided, else rich built-in Gyan engine)
-      const babaResponse = await askBabaAI(textToSend, language, apiKey, messages);
+      // Call real-time Baba AI service (Gemini with Google Search Grounding if key provided, else Free Cloud AI / BK Gyan)
+      const babaResponse = await askBabaAI(textToSend, language, apiKey, messages, enableGoogleSearch);
 
       const babaMsg: ChatMessage = {
         id: babaResponse.id,
@@ -308,7 +316,7 @@ export const BabaChatView: React.FC = () => {
           {/* Gemini API Key Toggle */}
           <button
             onClick={() => setShowKeyModal(true)}
-            title="Google Gemini AI कुंजी (Optional)"
+            title="Google Gemini AI कुंजी एवं सर्च सेटिंग्स"
             className={`p-1.5 rounded-xl border transition-colors ${
               apiKey
                 ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
@@ -341,6 +349,53 @@ export const BabaChatView: React.FC = () => {
           </button>
         </div>
       </header>
+
+      {/* REAL-TIME AI & GOOGLE SEARCH GROUNDING STATUS BAR */}
+      <div className="bg-[#12030F]/95 border-b border-amber-500/20 px-3 py-1.5 flex items-center justify-between text-[11px] font-hindi z-20">
+        <div className="flex items-center gap-1.5">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span className="font-semibold text-emerald-300 text-[10px] sm:text-xs">
+            {apiKey
+              ? enableGoogleSearch
+                ? '⚡ Gemini 1.5 + गूगल सर्च ग्राउंडिंग'
+                : '⚡ Google Gemini 1.5 AI'
+              : '⚡ रियल-टाइम AI इंजन सक्रिय'}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {apiKey ? (
+            <button
+              onClick={() => {
+                const next = !enableGoogleSearch;
+                setEnableGoogleSearch(next);
+                localStorage.setItem(SEARCH_STORAGE_KEY, String(next));
+                sound.playSoftClick();
+              }}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] transition-all ${
+                enableGoogleSearch
+                  ? 'bg-cyan-500/20 border-cyan-400/50 text-cyan-200'
+                  : 'bg-white/5 border-white/10 text-gray-400'
+              }`}
+              title="गूगल सर्च ग्राउंडिंग टॉगल करें"
+            >
+              <Globe className="w-3 h-3 text-cyan-400" />
+              <span>{enableGoogleSearch ? 'सर्च ऑन' : 'सर्च ऑफ'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowKeyModal(true)}
+              className="flex items-center gap-1 text-[10px] text-amber-300 hover:text-amber-100 underline"
+            >
+              <Globe className="w-3 h-3 text-cyan-400" />
+              <span>+ गूगल सर्च की जोड़ें</span>
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* CHAT MESSAGES FEED */}
       <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 scrollbar-none relative z-10">
@@ -375,9 +430,22 @@ export const BabaChatView: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <span className="text-lg animate-pulse">👑</span>
                     <div>
-                      <span className="font-serif font-black text-xs text-amber-300 tracking-wider block">
-                        बापदादा के अनमोल महावाक्य
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-serif font-black text-xs text-amber-300 tracking-wider">
+                          बापदादा के अनमोल महावाक्य
+                        </span>
+                        {/* Real-time AI & Search Badge */}
+                        {msg.babaData?.aiEngine === 'gemini-search' && (
+                          <span className="text-[9px] bg-cyan-900/60 border border-cyan-400/40 text-cyan-300 px-1.5 py-0.2 rounded-full font-sans flex items-center gap-0.5">
+                            <Globe className="w-2.5 h-2.5" /> Google Search
+                          </span>
+                        )}
+                        {msg.babaData?.aiEngine === 'pollinations-llm' && (
+                          <span className="text-[9px] bg-amber-500/20 border border-amber-400/40 text-amber-300 px-1.5 py-0.2 rounded-full font-sans">
+                            ⚡ Live AI
+                          </span>
+                        )}
+                      </div>
                       {msg.babaData?.category && (
                         <span className="text-[9px] text-amber-400/80 font-hindi">
                           {msg.babaData.category}
@@ -446,6 +514,47 @@ export const BabaChatView: React.FC = () => {
                   )}
                 </div>
 
+                {/* Real-time Google Search Queries if present */}
+                {msg.babaData?.searchQueries && msg.babaData.searchQueries.length > 0 && (
+                  <div className="p-2.5 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 text-[11px] font-hindi text-cyan-200 space-y-1">
+                    <div className="font-bold flex items-center gap-1.5 text-cyan-300">
+                      <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>रियल-टाइम गूगल सर्च ग्राउंडिंग:</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {msg.babaData.searchQueries.map((q, idx) => (
+                        <span key={idx} className="px-2 py-0.5 rounded-lg bg-cyan-900/60 border border-cyan-400/40 text-[10px]">
+                          🔍 {q}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Real-time Web Sources if present */}
+                {msg.babaData?.sources && msg.babaData.sources.length > 0 && (
+                  <div className="p-2.5 rounded-2xl bg-black/50 border border-amber-400/20 text-[11px] font-hindi space-y-1">
+                    <div className="font-bold text-amber-300 flex items-center gap-1.5">
+                      <span>🔗</span>
+                      <span>संदर्भ एवं वेब स्रोत:</span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      {msg.babaData.sources.map((src, idx) => (
+                        <a
+                          key={idx}
+                          href={src.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-cyan-300 hover:text-cyan-200 hover:underline truncate text-[10px] flex items-center gap-1"
+                        >
+                          <span className="text-amber-400">•</span>
+                          <span className="truncate">{src.title}</span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="text-[10px] text-right text-amber-400/60 font-mono">
                   {msg.timestamp}
                 </div>
@@ -464,9 +573,13 @@ export const BabaChatView: React.FC = () => {
 
         {/* Real-time Typing / Sakesh Streaming Indicator */}
         {isTyping && (
-          <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#240A1E]/80 border border-amber-400/40 text-amber-200 text-xs font-hindi max-w-xs animate-pulse">
+          <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-[#240A1E]/80 border border-amber-400/40 text-amber-200 text-xs font-hindi max-w-sm animate-pulse shadow-lg">
             <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
-            <span>बापदादा दृष्टि व सकाश दे रहे हैं...</span>
+            <span>
+              {apiKey
+                ? '🔍 शिव बाबा लाइव मुरली ज्ञान व गूगल सर्च से समाधान ला रहे हैं...'
+                : '⚡ शिव बाबा रियल-टाइम AI ज्ञान मंथन कर रहे हैं...'}
+            </span>
           </div>
         )}
 
@@ -536,15 +649,15 @@ export const BabaChatView: React.FC = () => {
         </form>
       </div>
 
-      {/* OPTIONAL GEMINI AI KEY MODAL */}
+      {/* REAL-TIME AI & GEMINI KEY MODAL */}
       {showKeyModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-[#1C0618] border-2 border-amber-400/80 rounded-3xl p-5 max-w-sm w-full space-y-3 shadow-2xl text-white">
-            <div className="flex items-center justify-between">
+          <div className="bg-[#1C0618] border-2 border-amber-400/80 rounded-3xl p-5 max-w-sm w-full space-y-4 shadow-2xl text-white">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div className="flex items-center gap-2">
-                <Key className="w-4 h-4 text-amber-400" />
+                <Globe className="w-4 h-4 text-cyan-400" />
                 <h3 className="text-sm font-bold font-hindi text-amber-100">
-                  Google Gemini AI कुंजी
+                  रियल-टाइम AI एवं गूगल सर्च
                 </h3>
               </div>
               <button
@@ -555,20 +668,66 @@ export const BabaChatView: React.FC = () => {
               </button>
             </div>
 
-            <p className="text-xs text-gray-300 font-hindi leading-relaxed">
-              ऐप में समृद्ध ज्ञान इंजन <strong>100% मुफ़्त</strong> अंतर्निहित है। यदि आप असीमित रियल-टाइम लाइव जेमिनी जनरेशन जोड़ना चाहते हैं, तो अपनी मुफ़्त AI Studio Key यहाँ दर्ज करें:
-            </p>
+            <div className="space-y-2 text-xs text-gray-300 font-hindi leading-relaxed">
+              <p>
+                ⚡ ऐप में <strong>मुफ़्त रियल-टाइम AI चैट</strong> पहले से सक्रिय है।
+              </p>
+              <div className="text-amber-200/90 bg-amber-500/10 p-2.5 rounded-xl border border-amber-400/20 space-y-1">
+                <div className="font-bold text-amber-300 flex items-center gap-1">
+                  <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Google Search Grounding:</span>
+                </div>
+                <p className="text-[11px] text-gray-300">
+                  यदि आप चाहते हैं कि बाबा आज की मुरली, लाइव समाचार और इंटरनेट से ताज़ा जानकारी खोजकर उत्तर दें, तो अपनी मुफ़्त Google Gemini API Key डालें:
+                </p>
+                <a
+                  href="https://aistudio.google.com/app/apikey"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-cyan-300 hover:underline block font-semibold text-[11px] pt-1"
+                >
+                  👉 10 सेकंड में मुफ़्त Gemini Key प्राप्त करें (Google AI Studio)
+                </a>
+              </div>
+            </div>
 
             <form onSubmit={handleSaveApiKey} className="space-y-3">
-              <input
-                type="password"
-                placeholder="AIzaSy..."
-                value={tempKeyInput}
-                onChange={(e) => setTempKeyInput(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-black/60 border border-amber-500/40 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono"
-              />
+              <div>
+                <label className="text-[11px] font-hindi text-amber-200 block mb-1">
+                  Gemini API Key:
+                </label>
+                <input
+                  type="password"
+                  placeholder="AIzaSy..."
+                  value={tempKeyInput}
+                  onChange={(e) => setTempKeyInput(e.target.value)}
+                  className="w-full px-3 py-2 rounded-xl bg-black/60 border border-amber-500/40 text-xs text-white focus:outline-none focus:ring-2 focus:ring-amber-400 font-mono"
+                />
+              </div>
 
-              <div className="flex gap-2">
+              {/* Google Search Toggle */}
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10">
+                <div className="text-xs font-hindi">
+                  <div className="font-bold text-cyan-300 flex items-center gap-1">
+                    <Globe className="w-3 h-3" />
+                    <span>लाइव गूगल सर्च ग्राउंडिंग</span>
+                  </div>
+                  <div className="text-[10px] text-gray-400">
+                    उत्तर में लाइव वेब संदर्भ शामिल करें
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={enableGoogleSearch}
+                  onChange={(e) => {
+                    setEnableGoogleSearch(e.target.checked);
+                    localStorage.setItem(SEARCH_STORAGE_KEY, String(e.target.checked));
+                  }}
+                  className="w-4 h-4 accent-amber-500 rounded cursor-pointer"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => {
@@ -585,7 +744,7 @@ export const BabaChatView: React.FC = () => {
                   type="submit"
                   className="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-rose-500 text-maroon-950 font-bold text-xs font-hindi shadow-md hover:opacity-95"
                 >
-                  सहेजें (Save Key)
+                  सहेजें (Save)
                 </button>
               </div>
             </form>
