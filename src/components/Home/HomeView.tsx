@@ -44,6 +44,7 @@ interface HomeViewProps {
   onSaveSpinReward: (reward: SpinReward) => void;
   onMarkMessageRead: (id: string) => void;
   onOpenAskBaba: () => void;
+  onUpdateProfile?: (profile: UserProfile) => void;
   onTogglePracticeItem: (key: keyof DailyPracticeState) => void;
   onNavigateTab: (tab: 'practice' | 'rescue' | 'progress' | 'profile' | 'settings') => void;
   onSelectRescueSituation: (situationId: string) => void;
@@ -62,6 +63,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onSaveSpinReward,
   onMarkMessageRead,
   onOpenAskBaba,
+  onUpdateProfile,
   onTogglePracticeItem,
   onNavigateTab,
   onSelectRescueSituation,
@@ -308,6 +310,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {showHigherSelfModal && (
         <HigherSelfViewerModal
           profile={profile}
+          onUpdateProfile={onUpdateProfile}
           onClose={() => setShowHigherSelfModal(false)}
         />
       )}

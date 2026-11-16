@@ -401,6 +401,7 @@ export const App: React.FC = () => {
                 onSaveSpinReward={handleSaveSpinReward}
                 onMarkMessageRead={handleMarkTeacherMessageRead}
                 onOpenAskBaba={() => setShowAskBabaModal(true)}
+                onUpdateProfile={setProfile}
                 onTogglePracticeItem={handleTogglePracticeItem}
                 onNavigateTab={(tab) => {
                   if (tab === 'rescue') setSelectedRescueSituationId(undefined);

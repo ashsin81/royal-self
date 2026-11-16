@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { UserProfile, Language } from '../../types';
+import { SPIRITUAL_AVATARS, HIGHER_SELF_ARTWORKS } from '../../data/spiritualAvatars';
 import {
   Type,
   Volume2,
@@ -305,28 +306,39 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </div>
           </div>
 
-          {/* Preset Spiritual Avatars */}
+          {/* Preset Spiritual Avatars Gallery */}
           <div>
-            <span className="text-[10px] uppercase font-bold text-spiritual-muted block mb-1 font-hindi">
-              या आध्यात्मिक अवतार चुनें:
+            <span className="text-[10px] uppercase font-bold text-spiritual-muted block mb-1.5 font-hindi flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-gold-600" />
+              <span>आध्यात्मिक अवतार गैलरी (Spiritual Avatar Gallery):</span>
             </span>
-            <div className="grid grid-cols-4 gap-1.5">
-              {avatarPresets.map((preset) => (
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {SPIRITUAL_AVATARS.map((avatar) => (
                 <button
-                  key={preset.id}
+                  key={avatar.id}
                   onClick={() => {
                     sound.playSoftClick();
-                    onUpdateProfile({ ...profile, avatarUrl: preset.url });
+                    onUpdateProfile({ ...profile, avatarUrl: avatar.imageUrl });
                   }}
-                  className={`p-1 rounded-lg border text-center transition-all ${
-                    profile.avatarUrl === preset.url
-                      ? 'border-maroon-700 ring-2 ring-gold-400'
-                      : 'border-gold-200 hover:border-gold-400'
+                  className={`p-1.5 rounded-xl border text-center transition-all group ${
+                    profile.avatarUrl === avatar.imageUrl
+                      ? 'border-maroon-700 bg-gold-100/60 ring-2 ring-gold-400'
+                      : 'border-gold-200 hover:border-gold-400 bg-white'
                   }`}
                 >
-                  <img src={preset.url} alt={preset.label} className="w-full h-10 object-cover rounded-md" />
-                  <span className="text-[9px] font-hindi block mt-0.5 truncate text-spiritual-dark">
-                    {preset.label}
+                  <div className="w-full h-14 rounded-lg overflow-hidden relative shadow-2xs">
+                    <img
+                      src={avatar.imageUrl}
+                      alt={avatar.nameHi}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=150&auto=format&fit=crop&q=80';
+                      }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    />
+                  </div>
+                  <span className="text-[9px] font-hindi font-medium block mt-1 truncate text-spiritual-dark">
+                    {avatar.nameHi}
                   </span>
                 </button>
               ))}
@@ -371,6 +383,35 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               className="hidden"
             />
           </label>
+
+          {/* Quick Select from Higher Self Artworks */}
+          <div>
+            <span className="text-[10px] uppercase font-bold text-spiritual-muted block mb-1 font-hindi">
+              या दिव्य स्वरूप आर्ट चुनें:
+            </span>
+            <div className="grid grid-cols-4 gap-1.5">
+              {HIGHER_SELF_ARTWORKS.map((art) => (
+                <button
+                  key={art.id}
+                  type="button"
+                  onClick={() => {
+                    sound.playSoftClick();
+                    onUpdateProfile({ ...profile, customInspirationPhoto: art.imageUrl });
+                  }}
+                  className={`p-1 rounded-lg border text-center transition-all ${
+                    profile.customInspirationPhoto === art.imageUrl
+                      ? 'border-maroon-700 ring-2 ring-gold-400 bg-gold-100/40'
+                      : 'border-gold-200 hover:border-gold-400 bg-white'
+                  }`}
+                >
+                  <img src={art.imageUrl} alt={art.titleHi} className="w-full h-10 object-cover rounded-md" />
+                  <span className="text-[8px] font-hindi block mt-0.5 truncate text-spiritual-dark">
+                    {art.titleHi.replace('मेरा ', '').replace(' स्वरूप', '')}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
