@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && cp dist/index.html dist/404.html && touch dist/.nojekyll && cd dist && git init && git checkout -B gh-pages && git add -A && git commit -m 'deploy: royal passport to gh-pages' && git push -f https://github.com/ashsin81/royal-self.git gh-pages"
   },
   "dependencies": {
     "clsx": "^2.1.1",
