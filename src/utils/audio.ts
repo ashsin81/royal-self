@@ -78,6 +78,11 @@ class SoundEffects {
     }
   }
 
+  // Chime alias for soft sparkle
+  playChime() {
+    this.playStampSound();
+  }
+
   // Gentle soft click for buttons
   playSoftClick() {
     try {
